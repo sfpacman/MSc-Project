@@ -1,7 +1,8 @@
 # This method can only indicates the relative level of each cell type
 #Importing gene markers per cell type for Danaher et al. 
 library(cellrangerRkit)
-library(plyr)
+library(magrittr)
+library(dplyr)
 B_cells <- c( "BLK"
               ,"CD19"
               ,"MS4A1"
@@ -95,7 +96,7 @@ for(type in cell_list){
   ### Paper use log2 Transformation- subjected to change 
   type_mean = log2(colMeans(type_expr))
   mean_score <- cbind(unlist(mean_score), type_mean)
-  }
+}
 colnames(mean_score) <-(1:length(mean_score[1,]))
 # tsne_proj <- analysis_results$tsne
 # proj_gene <- data.frame(cbind(projection,cell_class))
@@ -104,10 +105,10 @@ ar_cell_assign=list()
 for( i in 1:length(mean_score[,1])) {
   if(as.numeric(max(mean_score[i,])) == -Inf ){type= 999}
   else{ 
-  type = unlist(as.numeric(names(which(mean_score[i,]==max(mean_score[i,])))))
-  if(length(type) > 1 ){
-    type = paste(as.character(sort(type)),collapse = '+')
-  }
+    type = unlist(as.numeric(names(which(mean_score[i,]==max(mean_score[i,])))))
+    if(length(type) > 1 ){
+      type = paste(as.character(sort(type)),collapse = '+')
+    }
   }
   ar_cell_assign <- c(unlist(ar_cell_assign), type)
 }
@@ -116,9 +117,11 @@ for( i in 1:length(mean_score[,1])) {
 visualize_clusters(ar_cell_assign,analysis_results$tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels")
 cluster_result <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]
 cluster_counts <- cbind(cluster_result, ar_cell_assign)
+## determin cell type population in clusters
 colnames(mean_score) <-names(cell_list)
-cluster_mean <- data.frame(cluster_result[,2],mean_score)
-ddply(cluster_mean,.cluster, mean)
+clu <- cluster_result[,2]
+cluster_mean <- data.frame(clu,mean_score)
+cluster_mean %>% group_by(clu) %>% summarise_each(funs(mean))
 #bar chart for cell distrubtuion per cluster
 count_t <- table(cluster_counts$ar_cell_assign,cluster_counts$Cluster)
 barplot(count_t,	legend = rownames(count_t))
