@@ -1,0 +1,21 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+
+
+\begin{document}
+\nocite{zheng2017massively}
+\bibliographystyle{plain}
+\bibliography{ref}
+  
+\medskip
+
+In this study, Zheng \textit{et.al.} demonstrates an effective high-throughput single-cell RNA sequencing (scRNA-seq) method in which its rapid cell encapsulation and high cell capture rate enable tens of thousands of single cell within minutes by using GemCode technology platform. Such method, particularly the analytical part , provides an useful framework to conduct scRNA-seq analysis on cell sorting.
+\\
+
+Three major scRNA-seq analysis are carried out to show the reproducibility, sensitivity and versatility of the sequencing platform - sequencing performance of synthetic and cell lines RNAs, cell population profiling of 68K Peripheral blood mononuclear cell (PBMC) samples from a healthy donor (Donor A), scRNA-seq analysis of transplant bone marrow samples. In profiling heterogeneous population of PBMC samples, Zheng's team utilizes principal component analysis(PCA) on the top 1000 variable genes of those samples followed by k-mean clustering of the first 50 principle component to identify specific cell clusters.Each of the clusters are then classified based on the expression profile of gene markers for specific cell population. T-distributed stochastic neighbor embedding (t-SNE) is then used for visualization. By applying the prescribed method, they are able to classify the subtypes of PBMCs at expected ratios in which sub-population within certain cluster can also be identified.However, the detection of mutiplets from highly similar cell types can be difficult to detect.For further classification of 68K PBMCs,they apply the scRNA-seq reference transcriptome profiles from 10 bead-enriched sub-population of PBMC of Donor A.The reference-base classification is largely consistent with the marker-based approach, but some of the sub-populations were misclassified,possibly due to overlapping function of those population. More sophisticated clustering and classification method may be necessary to achieve higher accuracy. Apart from cell type profiling, they also successfully develop a novel approach to determine the cell origin by using single-nucleotide variants (SNVs) obtained from scRNA-seq  
+\\
+
+In brief, this paper shows an effective analysis work flow for scRNA-seq data which offers critical insights on applying single cell sequencing data on cell population identification. 
+
+\end{document}
