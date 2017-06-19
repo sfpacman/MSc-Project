@@ -1,13 +1,16 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
-
-
 
 \begin{document}
-\nocite{satija2015spatial}
-\bibliographystyle{plain}
-\bibliography{ref}
+\bibentry{satija2015spatial}
+%\bibliographystyle{plain}
+%\bibliography{ref}
   
 \medskip
-
+\paragraph{}
+Satija \textit{et.al.} introduce Seurat, a computation method, to infer cell location of single-cell RNA sequencing (scRNA-seq) data from \textit{}tit{in situ } spatial RNA pattern. Even though the focus of Seurat application is on spatial inference in this paper, its underling computational strategy, such as dealing with heterogeneous experimental data, can be applied to other purposes, such as developmental states or disease phenotype.
+\paragraph{}
+Satija's team uses zebrafish embryo scRNA-seq data to demonstrate the accuracy of Seurat in which 851 cells are spatially mapped.They first use \textit{in situ } hybridization result of the "landmark" genes of the embryo to construct a spatial reference map in which tissue is divided into user-defined discrete spatial domains, known as bins. In each bin, landmark genes are either labelled as "on" or "off" to create a distinct binary expression reference profile. Since only a small set of genes are used for spatial assessment on scRNA-seq data, the resulting inference is sensitive to technical noises, such as false negative and measurement errors.Instead of relying solely on the expression level of the landmark genes, Seurat built a separate model based on the expression of co-regulated genes of those genes to minimize the noise of individual measurement.Because of the difference in the nature of the continuous scRNA-seq data and binary reference profiles, Seurat uses bimodal distributions to relate both data to build a model in which posterior probability of each cell's origin from each of the bins can be calculated based on likelihood of individual cell's gene expressions being "on". This probabilistic approach also allows cells to be assigned into multiple bins if the cell cannot be assigned to one bin exclusively.The inferred spatial pattern of the cells is largely consistently with empirical data from benchmarking experiments and literature.
+\paragraph{}
+Satija further applies Seurat to analyze scRNA-seq data without the use of landmark genes. The cells are first clustered by Principal Components Analysis (PCA) and k-mean clustering. Then, each cluster is identified by the expression of gene markers and analyzed by Seurat. This unsupervised approach is able to assign rare subpopulations of zebrafish embryo cells to the expected location. This demonstrates Seurat can be used as a discovery tool to identify unknown cell population within complex tissues.
+\paragraph{}
+Even though Seurat is proven to be a versatile and powerful tool for spatial discovery, it might not be applicable to some tissues, as Seurat relies on the spatial distinctiveness of each gene expression profile. Tissues, such as tumor cell or adult retina, where their gene expression might not have a differential spatial pattern for Seurat to use as reference.    
 \end{document}

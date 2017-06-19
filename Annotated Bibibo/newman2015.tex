@@ -1,13 +1,16 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 
-
-
 \begin{document}
-\nocite{newman2015robust}
-\bibliographystyle{plain}
-\bibliography{ref}
+
+%\nocite{newman2015robust}
+%\bibliographystyle{plain}
+
+\bibentry{newman2015robust}
   
 \medskip
+\paragraph{}
+In this study, Newman \textit{et.al.} introduce a new method, known as Cell-type Identification By Estimating Relative Subsets Of RNA Transcripts (CYBERSORT), to measure the makeup of the cells from complex tissue. Its novel use of nu-support support vector regression ($\nu$SVR), a machine learning method, for cell type classification can be applied to single-cell RNA sequencing(scRNA-seq). Comparing to other computational methonds, the result suggests that CYBERSORT performs considerably well in classifying cells from mixture of unknown content and noise , (in the case of solid tumors) and cells from closely related cell-type (in the case of mixture of naive and memory B cells).The authors claim that the superior performance is because using $\nu$SVR as a feature selection helps minimize a loss function and penalty function. A linear loss function used in $\nu$SVR gives robustness to noise and over-fitting of the data while the use of L$_{2}$-norm penalty function offers tolerance to multicollinearity (predictors that are inter-correlated to each other) in which the gene expression profile would not be heavily biased toward the most correlated cell-type. Apart from $\nu$SVR,the authors also stress the importance of building cell-specific expression signature, a preprocessing step that filters irrelevant features of the signature before being applied to machine learning process, in which it can speed up the computation running time and increase the signal to noise ratio of the data.Hence, the authors conclude the use of $\nu$SVR in CYBERSORT as well as various statistical refinements address the critical issues of gene expression deconvolution for nearly any tissues.\\ 
 
+Noticeably, all gene signature profiles are obtained from microarray experiments in this study, so that it is unclear if the result would be different from the RNA-seq data. 
 \end{document}

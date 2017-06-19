@@ -2,21 +2,25 @@
 \usepackage[utf8]{inputenc}
 
 
-
+%%\thispagestyle{empty}
 \begin{document}
-\nocite{danaher2017gene}
-\bibliographystyle{plain}
-\bibliography{ref}
+%\nocite{danaher2017gene}
+%\bibliographystyle{plain}
+\section*{Reference}{
 \medskip
-\\
+\bibentry{danaher2017gene}}
+\medskip
 
-Danaher \textit{et.al.}'s study proposes a set of marker genes that can be used for measuring 14 immune cell sub-populations in a tumor microenvironment: tumor infiltrating lymphocytes(TILs) in gene expression assays.The proposed list of gene marker as well as the underlying statistical methods can be potentially useful in formulating relevant gene express signatures for immune cell identification.\\
 
-In tumor cell diagnostics and treatments, flow cytometry and immunohistochemsitry(ICH) are often used to quantify immune cell population, but those methods can only measure few gene markers.Gene expression profiling ,on the other hand, can provide more clinically actionable information. To determine the marker genes that can be used for profiling each cell types, Danaher's team first relied on the results of past studies of purified immune cell population, then develop a novel statistical method to select genes that exhibits maker behavior in a a tumor microenvironment.This method is based upon an adaption of Pearson correlation in which it takes into account that many biologically-related genes from different cell type may exhibit correlation. By applying this methods, only 60 genes out of 356 canadiate genes are selected in which each the quality of the select gene markers is varied among each cell type. As the authors show, the cell scores derived from the expression of selected gene markers broadly agree with both flow cytometry and ICH and show good reproduciblity among 12 different tumor samples. They further demonstrate the scores  
+\paragraph{}
+Danaher \textit{et.al.}'s study proposes a set of marker genes that can be used for measuring 14 immune cell sub-populations in a tumor microenvironment: tumor infiltrating lymphocytes(TILs) in gene expression assays.The proposed list of gene marker as well as the underlying statistical methods can be potentially useful in formulating relevant gene express signatures for immune cell identification. \\
+
+\paragraph{}
+In tumor cell diagnostics and treatments, flow cytometry and immunohistochemsitry(ICH) are often used to quantify immune cell population, but those methods can only measure few gene markers.Gene expression profiling ,on the other hand, can provide more clinically actionable information. To determine the marker genes that can be used for profiling each cell types, Danaher's team first relied on the results of past studies of purified immune cell population, then develop a novel statistical method to select genes that exhibits maker behavior in a a tumor microenvironment.This method is based upon an adaption of Pearson correlation in which it takes into account that many biologically-related genes from different cell type may exhibit correlation. By applying this methods, only 60 genes out of 356 candidate genes are selected in which each the quality of the select gene markers is varied among each cell type. As the authors show, the cell scores derived from the expression of selected gene markers broadly agree with both flow cytometry and ICH and show good reproduciblity among 12 different tumor samples. They further demonstrate the scores  
 can be used to access the change in cell population during immunotherapy which shows the scoring method can be useful in both discovery and clinical research.\\
 
+\paragraph{}
 This study provides a straightforward method to measure cell population in tumor sample which can be used in RNA sequencing.However,as the authors indicate, the marker selection is based on the expression pattern of the tumor cells from The Cancer Genome Atlas, so that adjustment may be deemed necessary for non-tumor samples . 
 
-
-
 \end{document}
+
