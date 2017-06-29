@@ -1,0 +1,30 @@
+---
+title: "Danaher's marker output"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+source("danaher.R")
+```
+
+## R Markdown
+
+This is an result for the gene singatures as well as assigned cell type for each cluster based on Danaher et al. 
+
+```{r danaher}
+for( i in 1:length(mean_score[1,])){
+print(visualize_me(mean_score[,i],cell_list[i],analysis_results$tsne[c("TSNE.1","TSNE.2")],title=names(cell_list)[i] ))
+}
+sig_plot <- visualize_clusters(cluster_tsne$cell_type,cluster_tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels")
+#sig_plot <-sig_plot +scale_fill_discrete(name="Cell Type",
+#                         breaks=unique(cluster_assignment$cell_type),
+#                         labels=sapply(unique(cluster_assignment$cell_type),function(x) names(cell_list[x])))
+
+print(sig_plot)
+
+counter <-1
+apply(score_by_cluster, 1,function(x) {plot(x,ylab="mean expression level",xlab="cell type", main=c("Cluster",counter)) 
+counter <<- counter + 1})
+```
+
+

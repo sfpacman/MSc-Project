@@ -3,6 +3,8 @@
 library(cellrangerRkit)
 library(magrittr)
 library(dplyr)
+library(reshape2)
+library(Matrix)
 B_cells <- c( "BLK"
               ,"CD19"
               ,"MS4A1"
@@ -77,13 +79,35 @@ Th1_cells <- c( "TBX21"
 )
 Treg <- c( "FOXP3"
 )
+#Function 
+visualize_me<- function(gbm,gene_probes,projection,limits=c(0,10),marker_size=0.1,title=NULL) {
+  gbm[gbm<limits[1]] <- limits[1]
+  gbm[gbm>limits[2]] <- limits[2]
+  gene_values <-gbm
+  #colnames(gene_values) <- gene_probes
+  projection_names <-  colnames(projection)
+  colnames(projection) <- c('Component.1', 'Component.2')
+  proj_gene <- data.frame(cbind(projection,gene_values))
+  proj_gene_melt <- melt(proj_gene, id.vars=c("Component.1", "Component.2"))
+  p<- ggplot(proj_gene_melt, aes(Component.1, Component.2)) +
+    geom_point(aes(colour=value),size=marker_size) + facet_wrap(~variable) +
+    scale_colour_gradient(low="grey",high="red",name = "val") +
+    labs(x=projection_names[1],y=projection_names[2])
+  if (!is.null(title)) {  p <- p + ggtitle(title) }
+  p <- p + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
+                              panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+  return(p)
+}
 cell_list <- list(B_cells,CD45,CD8_T_cells,Cytotoxic_cells,DC,Exhausted_CD8,Macrophages,Mast_cells,Neutrophils,NK_CD56dim_cells,NK_cells,T_cells,Th1_cells,Treg)
 names(cell_list) <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg"
 )
 ###loading the data set 
 gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex')
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
+cluster_result <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]
 ar_cluster <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]$Cluster
+tsne_proj <- analysis_results$tsne
 gbm1 <- gbm1[,analysis_results$tsne$Barcode]
 gen= fData(gbm1)
 ##cell_expr =exprs(gbm1)
@@ -94,41 +118,49 @@ for(type in cell_list){
   type_gene_select <-type_gene_select[!is.na(type_gene_select)]
   type_expr = gbm1[type_gene_select,]
   ### Paper use log2 Transformation- subjected to change 
-  type_mean = log2(colMeans(type_expr))
+  #type_mean = log2(colMeans(type_expr))
+  type_mean = colMeans(type_expr)
   mean_score <- cbind(unlist(mean_score), type_mean)
 }
 colnames(mean_score) <-(1:length(mean_score[1,]))
-# tsne_proj <- analysis_results$tsne
-# proj_gene <- data.frame(cbind(projection,cell_class))
-# proj_gene_melt <- melt(proj_gene, id.vars=c("Component.1", "Component.2"))
-ar_cell_assign=list() 
-for( i in 1:length(mean_score[,1])) {
-  if(as.numeric(max(mean_score[i,])) == -Inf ){type= 999}
-  else{ 
-    type = unlist(as.numeric(names(which(mean_score[i,]==max(mean_score[i,])))))
-    if(length(type) > 1 ){
-      type = paste(as.character(sort(type)),collapse = '+')
-    }
-  }
-  ar_cell_assign <- c(unlist(ar_cell_assign), type)
-}
+#Indivdual cell assignment
 
-##Fisrt parma is just a list of number then cbind with the data frame of tsne for labelling
-visualize_clusters(ar_cell_assign,analysis_results$tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels")
-cluster_result <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]
-cluster_counts <- cbind(cluster_result, ar_cell_assign)
-## determin cell type population in clusters
-colnames(mean_score) <-names(cell_list)
-clu <- cluster_result[,2]
-cluster_mean <- data.frame(clu,mean_score)
-cluster_mean %>% group_by(clu) %>% summarise_each(funs(mean))
-#bar chart for cell distrubtuion per cluster
-count_t <- table(cluster_counts$ar_cell_assign,cluster_counts$Cluster)
-barplot(count_t,	legend = rownames(count_t))
-## Calculate average TIL score/cell assign type
-# total_score_cluster=apply(mean_score>-Inf,1,mean)
-# total_score_cluster= cbind(total_score_cluster, cluster_result)
+# ar_cell_assign=list()
+# for( i in 1:length(mean_score[,1])) {
+#   if(as.numeric(max(mean_score[i,])) == 0 ){type= 999}
+#   else{
+#     type = unlist(as.numeric(names(which(mean_score[i,]==max(mean_score[i,])))))
+#     if(length(type) > 1 ){
+#       type = paste(as.character(sort(type)),collapse = '+')
+#     }
+#   }
+#   ar_cell_assign <- c(unlist(ar_cell_assign), type)
+# }
+# for( i in 1:length(mean_score[1,])){
+# visualize_me(mean_score[,i],cell_list[i],analysis_results$tsne[c("TSNE.1","TSNE.2")],title=names(cell_list)[i] )
+# }
+# 
+# ##Fisrt parma is just a list of number then cbind with the data frame of tsne for labelling
+# # visualize_clusters(ar_cell_assign,analysis_results$tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels")
+
+# # cluster_counts <- cbind(cluster_result, ar_cell_assign)
+# ## determin cell type population in clusters
+#colnames(mean_score) <-names(cell_list)
+cluster_mean <- data.frame(ar_cluster,mean_score)
+score_by_cluster <- cluster_mean %>% group_by(ar_cluster) %>% summarise_all(funs(mean))
+score_by_cluster <- score_by_cluster[, -which(names(score_by_cluster) %in% c("ar_cluster"))]
+cluster_type <-apply(score_by_cluster, 1,function(x) which(x == max(x)))
+cluster_type <-data.frame(Cluster=1:length(cluster_type),cell_type=cluster_type)
+cluster_assignment <- merge(x=cluster_result,y=cluster_type,by="Cluster")
+cluster_tsne <-merge(x=cluster_assignment, y=tsne_proj,by="Barcode")
+
+# #bar chart for cell distrubtuion per cluster
+# count_t <- table(cluster_counts$ar_cell_assign,cluster_counts$Cluster)
+# barplot(count_t,	legend = rownames(count_t))
+# ## Calculate average TIL score/cell assign type
+# total_score_cluster=apply(mean_score>0,1,mean)
+# # total_score_cluster= cbind(total_score_cluster, cluster_result)
 # result <- aggregate(total_score_cluster[,1],by= list(total_score_cluster[,2]), FUN= sum)
-
-CD45 <- lapply(mean_score,ar_cell_assign)
-plot(total_score)
+# 
+# CD45 <- lapply(mean_score,ar_cell_assign)
+# plot(total_score)
