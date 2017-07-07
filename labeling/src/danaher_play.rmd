@@ -45,7 +45,7 @@ This is a gene exprssion profile for each cell signature for each custer.The top
 ```{r ,paged.print=TRUE }
 top_sig <- data.frame(t(sapply(unique(all_type_expr_table$Cluster),function(x){ all_type_expr_table[all_type_expr_table$Cluster == x,][which(all_type_expr_table$precent_count[all_type_expr_table$Cluster == x] == max(all_type_expr_table$precent_count[all_type_expr_table$Cluster == x])),] })))
 top_sig$Signature <-lapply(top_sig$Signature,function(y){paste(y)})
-cbind(top_sig, cluster_type[,"name_type"])
+cbind(top_sig, cluster_assignment = cluster_type[,"name_type"])
 top_sig
 all_type_expr_table
 ```
