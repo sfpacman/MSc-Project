@@ -1,0 +1,16 @@
+base
+Matrix
+BiocGenerics
+Biobase
+RColorBrewer
+ggplot2
+bit
+bit64
+lattice
+plyr
+Rmisc
+cellrangerRkit
+magrittr
+dplyr
+reshape2
+bindrcpp

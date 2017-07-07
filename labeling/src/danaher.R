@@ -102,6 +102,25 @@ visualize_me<- function(gbm,gene_probes,projection,limits=c(0,10),marker_size=0.
 cell_list <- list(B_cells,CD45,CD8_T_cells,Cytotoxic_cells,DC,Exhausted_CD8,Macrophages,Mast_cells,Neutrophils,NK_CD56dim_cells,NK_cells,T_cells,Th1_cells,Treg)
 names(cell_list) <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg"
 )
+get_signature_matrix <- function(test,c,i){
+  all_list_gene <-list()
+  for(j in unique(test[test$Cluster==c,]$Barcode)){
+    ds <-test[test$Cluster == c & test$Barcode == j & test$Signature == i ,]
+    if(sum(as.numeric(ds$Expression))>0){
+      Gene_set <-unique(test[test$Cluster==c & test$Signature == i,]$Gene)  
+      Gene_name <- ds$Gene
+      list_gene <- as.numeric(ds$Expression)
+      no_expr_gene <- Gene_set[!(Gene_set %in% Gene_name)] 
+      no_expr_gene_list <- rep(0,length(no_expr_gene))
+      names(no_expr_gene_list) <- no_expr_gene
+      names(list_gene) <- Gene_name
+      list_gene <-cbind(t(list_gene),  t(no_expr_gene_list))
+      all_list_gene <-rbind(unlist(all_list_gene), unlist(list_gene))
+    }}
+  return (all_list_gene)}
+var_cor_func <- function(var.loadings, comp.sdev){
+  var.loadings*comp.sdev
+}
 ###loading the data set 
 gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex')
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
@@ -113,18 +132,39 @@ gen= fData(gbm1)
 ##cell_expr =exprs(gbm1)
 ##Selecting Genes marker from the expression data 
 mean_score <-list()
-for(type in cell_list){
-  type_gene_select <- gen[match(type,gen$symbol),]$id
+type_score_table <-list()
+all_type_expr <-list()
+for(i in 1:length(cell_list)){
+  type= cell_list[i]
+  type_gene_select <- gen[match(unlist(type),gen$symbol),]$id
   type_gene_select <-type_gene_select[!is.na(type_gene_select)]
-  type_expr = gbm1[type_gene_select,]
+  type_expr <- exprs(gbm1[type_gene_select,])
+  type_sum <- summary(type_expr)
+  type_expr_list <-cbind(Gene  = rownames(type_expr)[type_sum$i], Barcode = colnames(type_expr)[type_sum$j], Expression = type_sum$x,Signature= names(cell_list[i]))
+  type_expr_frame <-type_expr_list 
+  #type_expr_frame <- data.frame(Gene  = rownames(type_expr)[type_sum$i], Barcode = colnames(type_expr)[type_sum$j], Expression = type_sum$x )
+  type_expr_frame <- merge(x=type_expr_frame, y=cluster_result,by="Barcode")
+  all_type_expr <- rbind(all_type_expr,type_expr_frame)
+  #all_type_expr <- c(all_type_expr,list(type_expr_frame))
+  
   ### Paper use log2 Transformation- subjected to change 
   #type_mean = log2(colMeans(type_expr))
-  type_mean = colMeans(type_expr)
+  type_mean <- colMeans(type_expr)
   mean_score <- cbind(unlist(mean_score), type_mean)
 }
-colnames(mean_score) <-(1:length(mean_score[1,]))
-#Indivdual cell assignment
+###
+cluster_count <- cluster_result %>% group_by(Cluster) %>% summarise(cell_total_count=sum(n_distinct(Barcode)))
+all_type_expr_table <- all_type_expr %>% group_by(Cluster,Signature) %>% summarise(Barcode_count=sum(n_distinct(Barcode)), total_Exp= sum(as.numeric(Expression)), avg_non_zero=mean(as.numeric(Expression)) , SD= sd(as.numeric(Expression)) )
+all_type_expr_table<-merge(all_type_expr_table,cluster_count,by="Cluster")
+all_type_expr_table<- cbind(all_type_expr_table,precent_count =all_type_expr_table$Barcode_count/all_type_expr_table$cell_total_count *100)
+all_list_gene <-list()
 
+
+
+  
+
+#Indivdual cell assignment
+colnames(mean_score) <- names(cell_list)
 # ar_cell_assign=list()
 # for( i in 1:length(mean_score[,1])) {
 #   if(as.numeric(max(mean_score[i,])) == 0 ){type= 999}
@@ -150,7 +190,7 @@ cluster_mean <- data.frame(ar_cluster,mean_score)
 score_by_cluster <- cluster_mean %>% group_by(ar_cluster) %>% summarise_all(funs(mean))
 score_by_cluster <- score_by_cluster[, -which(names(score_by_cluster) %in% c("ar_cluster"))]
 cluster_type <-apply(score_by_cluster, 1,function(x) which(x == max(x)))
-cluster_type <-data.frame(Cluster=1:length(cluster_type),cell_type=cluster_type)
+cluster_type <-data.frame(Cluster=1:length(cluster_type),cell_type=cluster_type, name_type=names(cell_list)[cluster_type])
 cluster_assignment <- merge(x=cluster_result,y=cluster_type,by="Cluster")
 cluster_tsne <-merge(x=cluster_assignment, y=tsne_proj,by="Barcode")
 
