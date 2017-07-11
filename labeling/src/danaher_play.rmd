@@ -17,14 +17,15 @@ This is an result for the gene singatures as well as assigned cell type for each
 ```{r }
 knitr::opts_chunk$set(cache=TRUE)
 for( i in 1:length(mean_score[1,])){
-print(visualize_me(mean_score[,i],cell_list[i],analysis_results$tsne[c("TSNE.1","TSNE.2")],title=names(cell_list)[i]))
+print(visualize_me(mean_score[,i],cell_list[i],analysis_results$tsne[c("TSNE.1","TSNE.2")],title=names(cell_list)[i])+ scale_color_manual(values = colorRampPalette(c("blue", "red","yellow"))( length(cell_list[i]))))
+      
 # really hard to see
 #print(plot(mean_score[,i],type = "h",xlab="Single Cell",ylab=colnames(mean_score)[i]))
 h <-hist(mean_score[,i],plot = FALSE)
 
 print(plot(h, freq = TRUE, labels =TRUE, ylim=c(0, 1.2*max(h$counts)),main=c(names(cell_list)[i]," Score per Single Cell"),xlab=paste(sep=" ",names(cell_list)[i],"Expression Level"),ylab="Numbers of cells"))
 }
-sig_plot <- visualize_clusters(cluster_tsne$cell_type,cluster_tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels",legend_anno= sort(unique(cluster_tsne[,"name_type"])))
+sig_plot <- visualize_clusters(cluster_tsne$cell_type,cluster_tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels",legend_anno= sort(unique(cluster_tsne[,"name_type"])))+scale_color_manual(values = colorRampPalette(c("blue", "red","yellow"))( length(sort(unique(cluster_tsne[,"name_type"])))))
 #sig_plot <-sig_plot +scale_fill_discrete(name="Cell Type",
 #                         breaks=unique(cluster_assignment$cell_type),
 #                         labels=sapply(unique(cluster_assignment$cell_type),function(x) names(cell_list[x])))
@@ -47,12 +48,13 @@ top_sig <- data.frame(t(sapply(unique(all_type_expr_table$Cluster),function(x){ 
 top_sig$Signature <-lapply(top_sig$Signature,function(y){paste(y)})
 cbind(top_sig, cluster_assignment = cluster_type[,"name_type"])
 top_sig
-all_type_expr_table
+#all_type_expr_table
 ```
 A closer look at gene composition in Cluster 7 (used as an example). PCA is performed for Cytotoxic_cells to determine which gene(s) "drive" the signature. Excluding cell with only zeor counts. Furhter Normalization is required - Need to work on that.  
 ```{r}
 knitr::opts_chunk$set(cache=TRUE)
 all_list_gene<- get_signature_matrix (all_type_expr,7,"Cytotoxic_cells")
+colnames(all_list_gene) <- gen[match(unlist(colnames(all_list_gene)),gen$id),]$symbol
 alg_pca<-prcomp(all_list_gene)
 summary(alg_pca)
 plot(alg_pca, type = "l")

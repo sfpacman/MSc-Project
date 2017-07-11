@@ -160,9 +160,6 @@ all_type_expr_table<- cbind(all_type_expr_table,precent_count =all_type_expr_tab
 all_list_gene <-list()
 
 
-
-  
-
 #Indivdual cell assignment
 colnames(mean_score) <- names(cell_list)
 # ar_cell_assign=list()
