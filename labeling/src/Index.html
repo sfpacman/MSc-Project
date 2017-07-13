@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title> ChromoExploer- a Chromosome Database </title>
+<!--<link rel="shortcut icon" href="/home/yup/bioinfo/biocomp2/icon.png" type="image/x-icon" /> -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+<style type="text/css">
+
+  body { color: #65A3FF; background: white; overflow-x: hidden;}
+.start{ background: #79143D ;  text-alignt: center; margin: auto;}
+.chrom { background-image: url("misc/ncfetch.png");           
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain 50% auto;
+        height: 250px; width: :250px;
+        display: flex; }
+.non-floater { overflow:hidden; }
+iframe { width:100%; padding:0; border:0; height:100%; position: absolute;}
+</style>
+</head>
+<body>
+<!-- header Section -->
+<div class="container.fluid">
+<div class="start">
+  <div class="row">
+    <div class="col-sm-2">
+    <img src="misc/owl.jpg" class="img-responsive" alt="owl" style="opacity: 0.6;width:250px"> 
+  </div>
+ <div class="col-sm-8" >
+  <h1>MSc Master Project</h1>
+  <h2> Cell indeftifaction thorught single-cell sequencing (Working Title)  </h2>
+  </div>
+</div>
+</div>
+ <ul class="nav nav-tabs">
+    <li class="active"><a href="#">Home</a></li>
+    <li><a href="danaher_play.html" target="iframe_a">Danaher’s Gene Signature </a></li>
+    <li><a href="#">Menu 2</a></li>
+    <li><a href="#">Menu 3</a></li>
+  </ul>
+<!--div><a href="danaher_play.html" target="iframe_a">Gene Signature</a> </div> -->
+<div class= "non-floater">
+<iframe name="iframe_a" allowTransparency="true" frameborder="0" ></iframe> 
+</div>
+</div>
+</body>
