@@ -99,9 +99,7 @@ visualize_me<- function(gbm,gene_probes,projection,limits=c(0,10),marker_size=0.
 
   return(p)
 }
-cell_list <- list(B_cells,CD45,CD8_T_cells,Cytotoxic_cells,DC,Exhausted_CD8,Macrophages,Mast_cells,Neutrophils,NK_CD56dim_cells,NK_cells,T_cells,Th1_cells,Treg)
-names(cell_list) <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg"
-)
+
 get_signature_matrix <- function(test,c,i){
   all_list_gene <-list()
   for(j in unique(test[test$Cluster==c,]$Barcode)){
@@ -118,9 +116,20 @@ get_signature_matrix <- function(test,c,i){
       all_list_gene <-rbind(unlist(all_list_gene), unlist(list_gene))
     }}
   return (all_list_gene)}
-var_cor_func <- function(var.loadings, comp.sdev){
-  var.loadings*comp.sdev
+### To covert cluster type table back to list for list combination 
+deconstruct_summary_table <- function(df,n){
+  final.list = list()
+  tabl = t(df[,-which(names(df) %in% c("Cluster"))])
+  tabl =setNames(split(tabl,seq(nrow(tabl))),rownames(tabl))
+  for(x in 1: length(tabl)){
+    entry = cbind(  as.numeric(unlist(tabl[[x]])),  rep(names(tabl[x]),length(tabl[[x]])),  c(1:length(tabl[[x]])))
+  final.list = rbind(final.list, entry) }
+  colnames(final.list) = c(n,"Signature","Cluster")
+  return(final.list)
 }
+cell_list <- list(B_cells,CD45,CD8_T_cells,Cytotoxic_cells,DC,Exhausted_CD8,Macrophages,Mast_cells,Neutrophils,NK_CD56dim_cells,NK_cells,T_cells,Th1_cells,Treg)
+names(cell_list) <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg"
+)
 ###loading the data set 
 gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex')
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
@@ -129,11 +138,12 @@ ar_cluster <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]$Cluster
 tsne_proj <- analysis_results$tsne
 gbm1 <- gbm1[,analysis_results$tsne$Barcode]
 gen= fData(gbm1)
-##cell_expr =exprs(gbm1)
+
 ##Selecting Genes marker from the expression data 
 mean_score <-list()
 type_score_table <-list()
 all_type_expr <-list()
+var_score <- list()
 for(i in 1:length(cell_list)){
   type= cell_list[i]
   type_gene_select <- gen[match(unlist(type),gen$symbol),]$id
@@ -150,54 +160,41 @@ for(i in 1:length(cell_list)){
   ### Paper use log2 Transformation- subjected to change 
   #type_mean = log2(colMeans(type_expr))
   type_mean <- colMeans(type_expr)
+  var_mean <- sd(type_expr)
   mean_score <- cbind(unlist(mean_score), type_mean)
+  var_score <- cbind(unlist(var_score), type_mean)
 }
+colnames(mean_score) <- names(cell_list)
+colnames(var_score) <- names(cell_list)
 ###
 cluster_count <- cluster_result %>% group_by(Cluster) %>% summarise(cell_total_count=sum(n_distinct(Barcode)))
-all_type_expr_table <- all_type_expr %>% group_by(Cluster,Signature) %>% summarise(Barcode_count=sum(n_distinct(Barcode)), total_Exp= sum(as.numeric(Expression)), avg_non_zero=mean(as.numeric(Expression)) , SD= sd(as.numeric(Expression)) )
+all_type_expr_table <- all_type_expr %>% group_by(Cluster,Signature) %>% summarise(Barcode_count=sum(n_distinct(Barcode)), total_all_gene_Exp= sum(as.numeric(Expression)), avg_non_zero=mean(as.numeric(Expression)) , SD= sd(as.numeric(Expression)) )
 all_type_expr_table<-merge(all_type_expr_table,cluster_count,by="Cluster")
 all_type_expr_table<- cbind(all_type_expr_table,precent_count =all_type_expr_table$Barcode_count/all_type_expr_table$cell_total_count *100)
+
 all_list_gene <-list()
 
 
-#Indivdual cell assignment
-colnames(mean_score) <- names(cell_list)
-# ar_cell_assign=list()
-# for( i in 1:length(mean_score[,1])) {
-#   if(as.numeric(max(mean_score[i,])) == 0 ){type= 999}
-#   else{
-#     type = unlist(as.numeric(names(which(mean_score[i,]==max(mean_score[i,])))))
-#     if(length(type) > 1 ){
-#       type = paste(as.character(sort(type)),collapse = '+')
-#     }
-#   }
-#   ar_cell_assign <- c(unlist(ar_cell_assign), type)
-# }
-# for( i in 1:length(mean_score[1,])){
-# visualize_me(mean_score[,i],cell_list[i],analysis_results$tsne[c("TSNE.1","TSNE.2")],title=names(cell_list)[i] )
-# }
-# 
-# ##Fisrt parma is just a list of number then cbind with the data frame of tsne for labelling
-# # visualize_clusters(ar_cell_assign,analysis_results$tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels")
-
-# # cluster_counts <- cbind(cluster_result, ar_cell_assign)
-# ## determin cell type population in clusters
-#colnames(mean_score) <-names(cell_list)
-cluster_mean <- data.frame(ar_cluster,mean_score)
-score_by_cluster <- cluster_mean %>% group_by(ar_cluster) %>% summarise_all(funs(mean))
-score_by_cluster <- score_by_cluster[, -which(names(score_by_cluster) %in% c("ar_cluster"))]
+cluster_mean <- merge(x=cluster_result,y=mean_score,by.y="row.names" ,by.x="Barcode")
+cluster_var <-merge(x=cluster_result,y=var_score^2,by.y="row.names" ,by.x="Barcode")
+score_by_cluster <- cluster_mean[,-which(names(cluster_mean) %in% c("Barcode"))] %>% group_by(Cluster) %>% summarise_all(funs(mean))
+score_by_cluster_sum <- cluster_mean [,-which(names(cluster_mean) %in% c("Barcode"))]%>% group_by(Cluster) %>% summarise_all(funs(sum))
+score_by_cluster_var <- cluster_var[,-which(names(cluster_var) %in% c("Barcode"))]%>% group_by(Cluster) %>% summarise_all(funs(sum))
+score_by_cluster_var <- sqrt(score_by_cluster_var[,-which(names(score_by_cluster_var) %in% c("Cluster"))])
+score_by_cluster_var <- cbind(Cluster=rownames(score_by_cluster_var),score_by_cluster_var)
+all_type_expr_table <- merge(x=all_type_expr_table,y=deconstruct_summary_table(score_by_cluster,"cell_mean_expression"), by=c("Cluster","Signature") )
+all_type_expr_table <-  merge(x=all_type_expr_table,y=deconstruct_summary_table(score_by_cluster_sum,"cell_mean_expression_sum"), by=c("Cluster","Signature") )
+all_type_expr_table <-  merge(x=all_type_expr_table,y=deconstruct_summary_table(score_by_cluster_var,"cell_mean_expression_sd"), by=c("Cluster","Signature") )
+score_by_cluster <- score_by_cluster[, -which(names(score_by_cluster) %in% c("Cluster"))]
 cluster_type <-apply(score_by_cluster, 1,function(x) which(x == max(x)))
 cluster_type <-data.frame(Cluster=1:length(cluster_type),cell_type=cluster_type, name_type=names(cell_list)[cluster_type])
 cluster_assignment <- merge(x=cluster_result,y=cluster_type,by="Cluster")
 cluster_tsne <-merge(x=cluster_assignment, y=tsne_proj,by="Barcode")
 
-# #bar chart for cell distrubtuion per cluster
-# count_t <- table(cluster_counts$ar_cell_assign,cluster_counts$Cluster)
-# barplot(count_t,	legend = rownames(count_t))
-# ## Calculate average TIL score/cell assign type
-# total_score_cluster=apply(mean_score>0,1,mean)
-# # total_score_cluster= cbind(total_score_cluster, cluster_result)
-# result <- aggregate(total_score_cluster[,1],by= list(total_score_cluster[,2]), FUN= sum)
-# 
-# CD45 <- lapply(mean_score,ar_cell_assign)
-# plot(total_score)
+#Cluster centers for TSNE projections
+tsne_center <- list()
+for(i in 1:length(unique(cluster_tsne$Cluster))){
+c.x<-mean(cluster_tsne$TSNE.1[cluster_tsne$Cluster==i])
+c.y<-mean(cluster_tsne$TSNE.2[cluster_tsne$Cluster==i])
+tsne_center <- rbind(unlist(tsne_center), c(c.x,c.y))
+}

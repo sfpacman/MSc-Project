@@ -14,3 +14,4 @@ magrittr
 dplyr
 reshape2
 bindrcpp
+knitr
