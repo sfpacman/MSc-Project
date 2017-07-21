@@ -123,8 +123,8 @@ $(document).ready(function () {
 <div id="cell-signature-expression" class="section level2">
 <h2>Cell Signature Expression</h2>
 <ol style="list-style-type: decimal">
-<li>Expression values of each targeted genes per cell are obtained from gene expression matrix</li>
-<li>take the mean of the targted gene expressions as the cell signature score per cells</li>
+<li>Obtain expression values of specific genes from each gene signatures per cell from gene expression matrix</li>
+<li>Take the mean of the targted gene expressions of each signature as the cell signature score per cells</li>
 <li>group the cells by the cluster result</li>
 <li><p>assign the cell signatures for each cluster based on the highest sum of cell signature score for all cells in each clusters</p>
 <pre><code>for(i in 1:length(cell_list)){
@@ -144,7 +144,7 @@ cluster_type &lt;-apply(score_by_cluster, 1,function(x) which(x == max(x)))</cod
 <h2>Total Expression of Cell Signature</h2>
 <ol style="list-style-type: decimal">
 <li>Expression values of each targeted genes per cell are obtained from gene expression matrix</li>
-<li>Add up all gene expression based on the cell signature within the cluster</li>
+<li>Add up all gene expression for each cell signature within the cluster</li>
 </ol>
 <pre><code>all_type_expr_table &lt;- all_type_expr %&gt;% group_by(Cluster,Signature) %&gt;% summarise(Barcode_count=sum(n_distinct(Barcode)), total_all_gene_Exp= sum(as.numeric(Expression)))</code></pre>
 </div>
