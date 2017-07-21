@@ -9,9 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-## Cell Signature Expression  
-1. Expression values of each targeted genes per cell are obtained from gene expression matrix 
-2. take the mean of the targted gene expressions as the cell signature score per cells
+## Cell Signature Expression
+1. Obtain expression values of specific genes from each gene signatures per cell from gene expression matrix 
+2. Take the mean of the targted gene expressions of each signature as the cell signature score per cells
 3. group the cells by the cluster result
 4. assign the cell signatures for each cluster based on the highest sum of cell signature score for all cells in each clusters
 ```
@@ -30,7 +30,7 @@ cluster_type <-apply(score_by_cluster, 1,function(x) which(x == max(x)))
 
 ## Total Expression of Cell Signature  
 1. Expression values of each targeted genes per cell are obtained from gene expression matrix 
-2. Add up all gene expression based on the cell signature within the cluster 
+2. Add up all gene expression for each cell signature within the cluster 
 
 ```
 all_type_expr_table <- all_type_expr %>% group_by(Cluster,Signature) %>% summarise(Barcode_count=sum(n_distinct(Barcode)), total_all_gene_Exp= sum(as.numeric(Expression)))

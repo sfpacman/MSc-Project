@@ -15,11 +15,13 @@ library(knitr)
 
 ### Most Expressed Signature among clusters 
 This is a gene exprssion profile for each cell signature for each custer.The most expressed gene signatures of the majority of the cluster are well reprsented (All signatures are expressed among 80% to 90% of the cells in each  cluster, except in Cluster 4,5 and 9)
-```{r ,paged.print=TRUE }
+```{r ,paged.print=TRUE ,results='asis'}
 top_sig <- data.frame(t(sapply(unique(all_type_expr_table$Cluster),function(x){ all_type_expr_table[all_type_expr_table$Cluster == x,][which(all_type_expr_table$precent_count[all_type_expr_table$Cluster == x] == max(all_type_expr_table$precent_count[all_type_expr_table$Cluster == x])),] })))
 top_sig$Signature <-lapply(top_sig$Signature,function(y){paste(y)})
 top_sig$Cluster <-unique(unlist(top_sig$Cluster))
-kable(merge(x=top_sig, y=cluster_type[,c("Cluster","name_type")],by="Cluster"))
+top_sig <- merge(y=top_sig, x=cluster_type[,c("Cluster","name_type")],by="Cluster")
+colnames(top_sig)[2] <- "Assigned_Type"
+kable(top_sig)
 cat("\n")
 ```
 ## Principal Component Analysis

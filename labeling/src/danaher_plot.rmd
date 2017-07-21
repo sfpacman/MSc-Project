@@ -11,6 +11,7 @@ source("danaher.R")
 library(knitr)
 ```
 
+
 This is an result for the gene singatures as well as assigned cell type for each cluster based on Danaher et al. 
 
 ```{r ,results='asis'}
@@ -20,14 +21,25 @@ knitr::opts_chunk$set(cache=TRUE)
 sig_plot <- visualize_clusters(cluster_tsne$cell_type,cluster_tsne[c("TSNE.1","TSNE.2")],title="Danaher cell-type labels",legend_anno= sort(unique(cluster_tsne[,"name_type"])))+scale_color_manual(values = colorRampPalette(c("blue", "red","yellow"))( length(sort(unique(cluster_tsne[,"name_type"])))))+  annotate("text", x = tsne_center[, 1], y = tsne_center[, 2], size = 5,label=c(1:length(tsne_center[,1])))
 
 sig_plot
+top_sig <- data.frame(t(sapply(unique(all_type_expr_table$Cluster),function(x){ all_type_expr_table[all_type_expr_table$Cluster == x,][which(all_type_expr_table$precent_count[all_type_expr_table$Cluster == x] == max(all_type_expr_table$precent_count[all_type_expr_table$Cluster == x])),] })))
+top_sig$Signature <-lapply(top_sig$Signature,function(y){paste(y)})
+top_sig$Cluster <-unique(unlist(top_sig$Cluster))
+top_sig <- merge(y=top_sig, x=cluster_type[,c("Cluster","name_type")],by="Cluster")
+colnames(top_sig)[2] <- "Assigned_Type"
+kable(top_sig)
+
+cat("\n")
 
 counter <-1
 colnames(score_by_cluster) <- names(cell_list)
-apply(score_by_cluster, 1,function(x) {plot(x,ylab="mean expression level per cell",xlab="cell type", main=c("Cluster",counter))
-text(x, names(cell_list), cex=0.6, pos=4, col="red")
-sum_table <- kable(round(all_type_expr_table[all_type_expr_table$Cluster == counter,],3))
+apply(score_by_cluster, 1,function(x) { plot_x <- plot(x,ylab="mean expression level per cell",xlab="cell type", main=c("Cluster",counter))
+plot_x <- text(x, names(cell_list), cex=0.6, pos=4, col="red")
+sum_table <- kable(all_type_expr_table[all_type_expr_table$Cluster == counter,])
+plot_x
+cat("\n")
 print(sum_table)
 cat("\n")
+
 counter <<- counter + 1})
 
 for( i in 1:length(mean_score[1,])){
