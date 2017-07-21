@@ -133,6 +133,8 @@ names(cell_list) <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exh
 ###loading the data set 
 gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex')
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
+#gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/cytotoxic_t_filtered_gene_bc_matrices.mex')
+#analysis_results <- load_cellranger_analysis_results('~/bioinfo/Project/labeling/data/cytotoxic_t_filtered_gene_bc_matrices.mex')
 cluster_result <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]
 ar_cluster <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]$Cluster
 tsne_proj <- analysis_results$tsne
@@ -149,15 +151,14 @@ for(i in 1:length(cell_list)){
   type_gene_select <- gen[match(unlist(type),gen$symbol),]$id
   type_gene_select <-type_gene_select[!is.na(type_gene_select)]
   type_expr <- exprs(gbm1[type_gene_select,])
+  #computing expression summary for each cluster 
   type_sum <- summary(type_expr)
   type_expr_list <-cbind(Gene  = rownames(type_expr)[type_sum$i], Barcode = colnames(type_expr)[type_sum$j], Expression = type_sum$x,Signature= names(cell_list[i]))
   type_expr_frame <-type_expr_list 
-  #type_expr_frame <- data.frame(Gene  = rownames(type_expr)[type_sum$i], Barcode = colnames(type_expr)[type_sum$j], Expression = type_sum$x )
   type_expr_frame <- merge(x=type_expr_frame, y=cluster_result,by="Barcode")
   all_type_expr <- rbind(all_type_expr,type_expr_frame)
-  #all_type_expr <- c(all_type_expr,list(type_expr_frame))
-  
-  ### Paper use log2 Transformation- subjected to change 
+  ## computing mean score and variance  for each cells 
+  ## Paper use log2 Transformation- subjected to change 
   #type_mean = log2(colMeans(type_expr))
   type_mean <- colMeans(type_expr)
   var_mean <- sd(type_expr)
