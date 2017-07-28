@@ -44,5 +44,19 @@ get_sig_profile <- function(gbm,analysis_results,sig_def){
   cluster_type <-data.frame(Cluster=1:length(cluster_type),cell_type=cluster_type, name_type=names(cell_list)[cluster_type])
   cluster_assignment <- merge(x=cluster_result,y=cluster_type,by="Cluster")
   cluster_tsne <-merge(x=cluster_assignment, y=tsne_proj,by="Barcode")
-  
 }
+
+load_purified_pbmc_types<-function(pure_select_file,pure_gene_ens) {
+  pure_select_id <- pure_select_file$pure_id   # from pure_select_file
+  pure_select_avg <- pure_select_file$pure_avg # from pure_select_file
+  pure_use_genes <- pure_select_file$pure_use_genes # from pure_select_file
+  pure_use_genes_ens<-pure_gene_ens[pure_use_genes]
+  avg<-data.frame(t(pure_select_avg))
+  rownames(avg)<-pure_use_genes_ens
+  names(avg)<-pure_select_id
+  return(avg)
+}
+pure_11 <- readRDS('~/bioinfo/Project/labeling/data/all_pure_select_11types.rds')
+pure_pbmcs <- readRDS('~/bioinfo/Project/labeling/data/all_pure_pbmc_data.rds')
+
+

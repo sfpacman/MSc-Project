@@ -130,6 +130,24 @@ deconstruct_summary_table <- function(df,n){
 cell_list <- list(B_cells,CD45,CD8_T_cells,Cytotoxic_cells,DC,Exhausted_CD8,Macrophages,Mast_cells,Neutrophils,NK_CD56dim_cells,NK_cells,T_cells,Th1_cells,Treg)
 names(cell_list) <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg"
 )
+#head_tail braek function for score  
+htb <- function(data){
+  outp <- list()
+  outp<-htb_inner(data,outp)
+  return(outp)
+}
+
+htb_inner <- function(data,outp){
+  data_length <- length(data)
+  data_mean <- mean(data)
+  outp <- c(unlist(outp),data_mean)
+  head <- data[data>data_mean]
+  if (length(head) >1 & length(head) / data_length < 0.4){
+    return(htb_inner(head,outp))}
+  else {return(outp)}
+  
+}
+
 ###loading the data set 
 gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex')
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
