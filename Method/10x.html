@@ -7,14 +7,14 @@
 <meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
 <!-- html --> 
 <meta name="src" content="10x.tex"> 
-<meta name="date" content="2017-07-28 14:53:00"> 
+<meta name="date" content="2017-07-28 16:43:00"> 
 <link rel="stylesheet" type="text/css" href="10x.css"> 
 </head><body 
 >
-   <h3 class="sectionHead"><span class="titlemark">1   </span> <a 
- id="x1-10001"></a>10X marker-based classification</h3>
+   <h3 class="likesectionHead"><a 
+ id="x1-1000"></a>10X marker-based classification</h3>
 <!--l. 6--><p class="noindent" ><span class="paragraphHead"><a 
- id="x1-20001"></a></span>
+ id="x1-2000"></a></span>
    This approach employs a customized set of known marker from the literature to
 infer the identity of cell clusters based on the observed cluster-specific genes of
 each clusters. Several types of maker gens can be used to infer a specific
@@ -88,7 +88,7 @@ class="td11">      </td>
 class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
  style="vertical-align:baseline;" id="TBL-1-11-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-11-1"  
 class="td11">naive T-cell                    </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-11-2"  
-class="td11">    D3      </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-11-3"  
+class="td11">   ID3     </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-11-3"  
 class="td11">      </td>
 </tr><tr 
 class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
@@ -101,16 +101,16 @@ class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr
  style="vertical-align:baseline;" id="TBL-1-13-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-13-1"  
 class="td11">                      </td> </tr></table></div>
 <!--l. 25--><p class="noindent" ><span class="paragraphHead"><a 
- id="x1-30001"></a></span>
+ id="x1-3000"></a></span>
    * in conjunction with T cell gene marker: CD3D
-   <h3 class="sectionHead"><span class="titlemark">2   </span> <a 
- id="x1-40002"></a>10X correlation with 11 purified PBMC populations</h3>
+   <h3 class="likesectionHead"><a 
+ id="x1-4000"></a>10X correlation with 11 purified PBMC populations</h3>
 <!--l. 28--><p class="noindent" ><span class="paragraphHead"><a 
- id="x1-50002"></a></span>
+ id="x1-5000"></a></span>
    This reference-based approach is based on the gene expression profile of 11
 purified PBMC populations.
 <!--l. 30--><p class="noindent" ><span class="paragraphHead"><a 
- id="x1-60002"></a><span 
+ id="x1-6000"></a><span 
 class="cmbx-10">Selection of 11 purified PBMC populations</span></span>
    &#x00A0;<br 
 class="newline" />To ensure purity of each population, FACS analyses is first carried out followed by
@@ -184,10 +184,10 @@ class="hline"><td><hr></td><td><hr></td></tr><tr
  style="vertical-align:baseline;" id="TBL-2-12-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-12-1"  
 class="td11">                             </td> </tr></table></div>
 <!--l. 48--><p class="noindent" ><span class="paragraphHead"><a 
- id="x1-70002"></a></span>
+ id="x1-7000"></a></span>
    * Used for cell selection because of the multiple clusters in the population
 <!--l. 50--><p class="noindent" ><span class="paragraphHead"><a 
- id="x1-80002"></a><span 
+ id="x1-8000"></a><span 
 class="cmbx-10">Cell classification by using expression profile </span></span>
    &#x00A0;<br 
 class="newline" />Each reference population is first normalized and downsampled to about 16k
@@ -198,7 +198,86 @@ cells and each expression profile. The identity of Cell will then be assigned to
 purified population with the highest correlation. Because some population are
 overlapped, such as CD4+ T helper and other CD4+ cells. Therefore, readjustment
 are required for the cells that has highest score and second highest score for those
-type of cells
+type of cells.
+<!--l. 52--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-9000"></a><span 
+class="cmbx-10">Antibody used for FACS</span></span>
+   &#x00A0;<br 
+class="newline" /><!--tex4ht:inline--><div class="tabular"> <table id="TBL-3" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-3-1g"><col 
+id="TBL-3-1"></colgroup><colgroup id="TBL-3-2g"><col 
+id="TBL-3-2"></colgroup><colgroup id="TBL-3-3g"><col 
+id="TBL-3-3"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-1-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-1-1"  
+class="td11">CD4+/CD45RO+ T memory      </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-1-2"  
+class="td11"> CD4-FITC </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-1-3"  
+class="td11">CD45RO-PE</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-2-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-2-1"  
+class="td11">CD19+ B                                 </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-2-2"  
+class="td11">CD19-FITC</td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-2-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-3-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-3-1"  
+class="td11">CD14+ Monocyte                      </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-3-2"  
+class="td11">CD14-FITC</td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-3-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-4-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-4-1"  
+class="td11">Dendritic                                  </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-4-2"  
+class="td11">   N/A     </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-4-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-5-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-5-1"  
+class="td11">CD56+ NK                               </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-5-2"  
+class="td11">CD56-FITC</td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-5-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-6-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-6-1"  
+class="td11">CD34+                                    </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-6-2"  
+class="td11">CD34-FITC</td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-6-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-7-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-7-1"  
+class="td11">CD4+/CD25 T Reg                    </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-7-2"  
+class="td11"> CD4-FITC </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-7-3"  
+class="td11">   CD25-PE</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-8-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-8-1"  
+class="td11">CD4+/CD45RA+/CD25- Naive T </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-8-2"  
+class="td11"> CD4-FITC </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-8-3"  
+class="td11">CD45RO-PE</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-9-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-9-1"  
+class="td11">CD4+ T Helper2                        </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-9-2"  
+class="td11"> CD4-FITC </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-9-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-10-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-10-1"  
+class="td11">CD8+/CD45RA+ Naive Cytotoxic</td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-10-2"  
+class="td11"> CD8-FITC </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-10-3"  
+class="td11">CD45RA-PE</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-11-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-11-1"  
+class="td11">CD8+ Cytotoxic T                     </td><td  style="white-space:nowrap; text-align:center;" id="TBL-3-11-2"  
+class="td11"> CD8-FITC </td><td  style="white-space:nowrap; text-align:right;" id="TBL-3-11-3"  
+class="td11">           </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-3-12-"><td  style="white-space:nowrap; text-align:left;" id="TBL-3-12-1"  
+class="td11">                             </td></tr></table></div>
     
 </body></html> 
 
