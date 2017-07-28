@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+  "http://www.w3.org/TR/html4/loose.dtd">  
+<html > 
+<head><title></title> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta name="generator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<meta name="originator" content="TeX4ht (http://www.cse.ohio-state.edu/~gurari/TeX4ht/)"> 
+<!-- html --> 
+<meta name="src" content="10x.tex"> 
+<meta name="date" content="2017-07-28 14:53:00"> 
+<link rel="stylesheet" type="text/css" href="10x.css"> 
+</head><body 
+>
+   <h3 class="sectionHead"><span class="titlemark">1   </span> <a 
+ id="x1-10001"></a>10X marker-based classification</h3>
+<!--l. 6--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-20001"></a></span>
+   This approach employs a customized set of known marker from the literature to
+infer the identity of cell clusters based on the observed cluster-specific genes of
+each clusters. Several types of maker gens can be used to infer a specific
+cell-type. For example, a cluster can be identified as CD4+ T cells , if the
+cluster has a strong expression of CD3D (T cell) and CD4(CD4+ Cell).
+<br 
+class="newline" />
+   <div class="tabular"> <table id="TBL-1" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-1-1g"><col 
+id="TBL-1-1"></colgroup><colgroup id="TBL-1-2g"><col 
+id="TBL-1-2"></colgroup><colgroup id="TBL-1-3g"><col 
+id="TBL-1-3"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-1-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-1-1"  
+class="td11">Cell type                      </td><td colspan="2" style="white-space:nowrap; text-align:center;" id="TBL-1-1-2"  
+class="td11">    <div class="multicolumn"  style="white-space:nowrap; text-align:center;">Gene Marker</div>
+</td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-2-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-2-1"  
+class="td11">myeloid cells                   </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-2-2"  
+class="td11">  S100A8   </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-2-3"  
+class="td11">S100A9</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-3-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-3-1"  
+class="td11">B cells                           </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-3-2"  
+class="td11">  CD79A   </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-3-3"  
+class="td11">      </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-4-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-4-1"  
+class="td11">NK cells </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-1-4-2"  
+class="td11"> NKG7 </td> <td  style="white-space:nowrap; text-align:right;" id="TBL-1-4-3"  
+class="td11"></td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-5-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-5-1"  
+class="td11">dendritic cells                 </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-5-2"  
+class="td11"> FCER1A  </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-5-3"  
+class="td11">      </td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-6-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-6-1"  
+class="td11">T cells </td> <td  style="white-space:nowrap; text-align:center;" id="TBL-1-6-2"  
+class="td11"> CD3D </td> <td  style="white-space:nowrap; text-align:right;" id="TBL-1-6-3"  
+class="td11"></td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-7-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-7-1"  
+class="td11">memory T cells               </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-7-2"  
+class="td11">  CCR10   </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-7-3"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-8-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-8-1"  
+class="td11">regulatory T cells            </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-8-2"  
+class="td11">TNFRSF18</td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-8-3"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-9-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-9-1"  
+class="td11">CD8+                           </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-9-2"  
+class="td11">  CD8A    </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-9-3"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-10-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-10-1"  
+class="td11">CD4+                           </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-10-2"  
+class="td11">   CD4     </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-10-3"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-11-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-11-1"  
+class="td11">naive T-cell                    </td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-11-2"  
+class="td11">    D3      </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-11-3"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-12-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-12-1"  
+class="td11">Activated cytotoxic T cells</td><td  style="white-space:nowrap; text-align:center;" id="TBL-1-12-2"  
+class="td11">  NKG7*   </td><td  style="white-space:nowrap; text-align:right;" id="TBL-1-12-3"  
+class="td11">      </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-1-13-"><td  style="white-space:nowrap; text-align:left;" id="TBL-1-13-1"  
+class="td11">                      </td> </tr></table></div>
+<!--l. 25--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-30001"></a></span>
+   * in conjunction with T cell gene marker: CD3D
+   <h3 class="sectionHead"><span class="titlemark">2   </span> <a 
+ id="x1-40002"></a>10X correlation with 11 purified PBMC populations</h3>
+<!--l. 28--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-50002"></a></span>
+   This reference-based approach is based on the gene expression profile of 11
+purified PBMC populations.
+<!--l. 30--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-60002"></a><span 
+class="cmbx-10">Selection of 11 purified PBMC populations</span></span>
+   &#x00A0;<br 
+class="newline" />To ensure purity of each population, FACS analyses is first carried out followed by
+cluster analysis of the gene expression (PCA and tSNE). If there is more than
+one cluster, genes markers are used for cell selection. For quality control,
+other genes markers are also used to check the identity of each population
+<br 
+class="newline" />
+
+   <div class="tabular"> <table id="TBL-2" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-2-1g"><col 
+id="TBL-2-1"></colgroup><colgroup id="TBL-2-2g"><col 
+id="TBL-2-2"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-1-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-1-1"  
+class="td11">CD19+ B                                </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-1-2"  
+class="td11">    CD74,CD27</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-2-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-2-1"  
+class="td11">CD14+ Monocyte                      </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-2-2"  
+class="td11">         FTL*</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-3-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-3-1"  
+class="td11">Dendritic                                  </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-3-2"  
+class="td11">CLEC9A*,CD1C</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-4-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-4-1"  
+class="td11">CD34+                                    </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-4-2"  
+class="td11">         CD34*</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-5-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-5-1"  
+class="td11">CD56+ NK                               </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-5-2"  
+class="td11">   CD3D,NKG7</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-6-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-6-1"  
+class="td11">CD4+/CD25 T Reg                    </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-6-2"  
+class="td11">         NKG7</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-7-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-7-1"  
+class="td11">CD4+/CD45RA+/CD25- Naive T </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-7-2"  
+class="td11">         NKG7</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-8-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-8-1"  
+class="td11">CD4+/CD45RO+ Memory          </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-8-2"  
+class="td11">         NKG7</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-9-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-9-1"  
+class="td11">CD4+ T Helper2                        </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-9-2"  
+class="td11">         NKG7</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-10-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-10-1"  
+class="td11">CD8+/CD45RA+ Naive Cytotoxic</td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-10-2"  
+class="td11">         NKG7</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-11-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-11-1"  
+class="td11">CD8+ Cytotoxic T                     </td><td  style="white-space:nowrap; text-align:right;" id="TBL-2-11-2"  
+class="td11">   CD8A,CD3D</td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-2-12-"><td  style="white-space:nowrap; text-align:left;" id="TBL-2-12-1"  
+class="td11">                             </td> </tr></table></div>
+<!--l. 48--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-70002"></a></span>
+   * Used for cell selection because of the multiple clusters in the population
+<!--l. 50--><p class="noindent" ><span class="paragraphHead"><a 
+ id="x1-80002"></a><span 
+class="cmbx-10">Cell classification by using expression profile </span></span>
+   &#x00A0;<br 
+class="newline" />Each reference population is first normalized and downsampled to about 16k
+confidently mapped reads per cell to ensure consistency among the populations.Then,
+for each population, the average expression of genes of all cells is then calculated to
+form the expression profile. Spearman&#8217;s correlation is then calculated between each
+cells and each expression profile. The identity of Cell will then be assigned to the
+purified population with the highest correlation. Because some population are
+overlapped, such as CD4+ T helper and other CD4+ cells. Therefore, readjustment
+are required for the cells that has highest score and second highest score for those
+type of cells
+    
+</body></html> 
+
+
+

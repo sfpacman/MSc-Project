@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ampersand]{easylist}
+
+\begin{document}
+
+\section{Discussion}
+\paragraph{}
+10X marker-based Classification: 
+\begin{easylist}[itemize]
+& Difficult to automate/code- require manual/human input
+&& Classification based on human observation/judgment && Cut-off point for selection is arbitrary 
+&& Gene-markers are selected sole base on past literature
+
+\end{easylist}
+\paragraph{}
+Danaher's marker-based:
+\begin{easylist}[itemize]
+& Systematic approach
+&& All marker genes are tested and selected for their specificity and applicability as marker
+&& Specific method for selecting cell identify  
+& Only tested on bulk-RNA seq data 
+\end{easylist}
+\paragraph{}
+10X FACS markers:
+\begin{easylist}[itemize]
+& Lack of discriminatory power (specificity)
+& Not used to id cell cluster but rather used as QC (except CD14+ Monocyte,Dendritic & CD8+ Cytotoxic T - because of the detection of multiple cluster)
+\end{easylist}
+\paragraph{}
+10X population correlation:
+\begin{easylist}[itemize]
+
+& Doesn't require prior knowledge of cell type 
+&& pro: able to id new cell cluster 
+&& Con: no experimental evidences to support  
+& Data normalization and selection becomes more critical than the last two methods 
+& Still require manual adjustment for disambiguating results from some overlapping population 
+\end{easylist}
+
+\end{document}
