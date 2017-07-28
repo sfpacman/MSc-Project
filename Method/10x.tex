@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \begin{document}
 
-\section{10X marker-based classification}
+\section*{10X marker-based classification}
 \paragraph{}
 This approach employs a customized set of known marker from the literature to infer the identity of cell clusters  based on the observed cluster-specific genes of each clusters. Several types of maker gens can be used to infer a specific cell-type. For example, a cluster can be identified as CD4+ T cells , if the cluster has a strong expression of CD3D (T cell) and CD4(CD4+ Cell). \\ 
 \par
@@ -18,13 +18,13 @@ memory T cells&CCR10&\\	\hline
 regulatory T cells&TNFRSF18&\\ \hline	
 CD8+&CD8A&\\	\hline
 CD4+&CD4&\\	\hline
-naive T-cell&D3& \\	\hline
+naive T-cell&ID3& \\	\hline
 Activated cytotoxic T cells&NKG7*& \\ 	
 \hline
 \end{tabular}
 \paragraph{}
 * in conjunction with T cell gene marker: CD3D 
-\section{10X correlation with 11 purified PBMC populations}
+\section*{10X correlation with 11 purified PBMC populations}
 \paragraph{}
 This reference-based approach is based on the gene expression profile of 11 purified PBMC populations.
 \paragraph{Selection of 11 purified PBMC populations} ~\\
@@ -48,7 +48,21 @@ CD8+ Cytotoxic T&CD8A,CD3D\\ \hline
 \paragraph{}
 * Used for cell selection because of the multiple clusters in the population
 \paragraph{Cell classification by using expression profile } ~\\
-Each reference population is first normalized and   downsampled to about 16k confidently mapped reads per cell to ensure consistency among the populations.Then, for each population, the average expression of genes of all cells is then calculated to form the expression profile. Spearman’s correlation is then calculated between each cells and each expression profile. The identity of Cell will then be assigned to the purified population with the highest correlation. Because some population are overlapped, such as CD4+ T helper and other CD4+ cells. Therefore, readjustment are required for the cells that has highest score and second highest score for those type of cells     
-
+Each reference population is first normalized and downsampled to ∼16k confidently mapped reads per cell to ensure consistency among the populations.Then, for each population, the average expression of genes of all cells is then calculated to form the expression profile. Spearman’s correlation is then calculated between each cells and each expression profile. The identity of Cell will then be assigned to the purified population with the highest correlation. Because some population are overlapped, such as CD4+ T helper and other CD4+ cells. Therefore, readjustment are required for the cells that has highest score and second highest score for those type of cells.     
+\paragraph{Antibody used for FACS} ~\\
+\begin{tabular}{ |l| c|r| }
+\hline
+CD4+/CD45RO+  T memory&CD4-FITC&CD45RO-PE\\ \hline
+CD19+ B&CD19-FITC&\\ \hline
+CD14+ Monocyte&CD14-FITC&\\ \hline
+Dendritic&N/A&\\ \hline
+CD56+ NK&CD56-FITC&\\ \hline
+CD34+&CD34-FITC&\\ \hline
+CD4+/CD25 T Reg&CD4-FITC&CD25-PE\\ \hline
+CD4+/CD45RA+/CD25- Naive T&CD4-FITC&CD45RO-PE\\ \hline
+CD4+ T Helper2&CD4-FITC&\\ \hline
+CD8+/CD45RA+ Naive Cytotoxic&CD8-FITC&CD45RA-PE\\ \hline
+CD8+ Cytotoxic T&CD8-FITC&\\ \hline
+\end{tabular}
 
 \end{document}
