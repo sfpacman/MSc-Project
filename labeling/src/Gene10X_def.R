@@ -16,15 +16,15 @@
 #   cell_id[id] <- check_genes 
 # }
 # Marker Def for 10X 
-myeloid_cells<- c( S100A8,  S100A9)
+myeloid_cells<- c( S100A8, S100A9)
 B_cells<- c( CD79A)
 NK_cells<- c( NKG7)
 dendritic_cells <- c( FCER1A)
 T_cells<- c( CD3D)
 memory_T_cells<- c( CCR10)
-regulatory_T_cells<-c( TNFRSF18)
+regulatory_T_cells<-c(TNFRSF18)
 CD8 <- c(CD8A)
-CD4 <- c( CD4)
+CD4 <- c(CD4)
 naive_T-cell<- c( ID3)
 Activated_cytotoxic_T_cells<- c( NKG7)
 

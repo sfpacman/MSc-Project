@@ -8,8 +8,11 @@ library(cellrangerRkit)
   
   sig_genes <- intersect(use_gene_ids, rownames(dmap_data))
   #expression matrix of gene_id X cell(barcode) 
+  
   m_forsig <- as.matrix(m_filt[which(use_gene_ids %in% sig_genes),])
-  #expression matrix gene_id X pure_11 pop(barcode) 
+  #expression matrix gene_id X pure_11 pop(barcode)
+  # msig <- exp_gbm1[which(use_genes_n_ens %in% sig_genes),]
+  #sig_data_filt <- ppt[which(rownames(ppt) %in% sig_genes),]
   sig_data_filt <- dmap_data[match(use_gene_ids[which(use_gene_ids %in% sig_genes)], rownames(dmap_data)),]
   #co
   z <- lapply(1:ncol(sig_data_filt), function(j) sapply(1:nrow(m_forsig), function(i) cor(m_forsig[i,], sig_data_filt[j,], method='spearman')))
@@ -141,7 +144,7 @@ load_purified_pbmc_types<-function(pure_select_file) {
   pure_use_genes <- pure_select_file$pure_use_genes # from pure_select_file
   pure_use_genes_ens<-pure_select_file$pure_use_gene_name
   avg<-data.frame(t(pure_select_avg))
-  rownames(avg)<-pure_use_genes_ens
+  rownames(avg)<-pure_select_file$pure_use_gene_name
   names(avg)<-pure_select_id
   return(avg)
 }
@@ -167,10 +170,10 @@ gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_d
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
 pure_11 <- readRDS('~/bioinfo/Project/labeling/data/all_pure_select_11types.rds')
 tdf<- analysis_results$tsne
+gen<- fData(gbm1)
 #getting gene id
-pure_11$pure_use_gene_name <-sapply(pure_11$pure_use_genes,function(x){gen[x,]$symbol})
+pure_11$pure_use_gene_name <-sapply(pure_11$pure_use_genes,function(x){gen[x,]$id})
 #need to invert this for cellRangaer function 
-ppt <- t(load_purified_pbmc_types(pure_11))
 #Normalize the umi count
 use_genes <- get_nonzero_genes(gbm1)
 
