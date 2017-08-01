@@ -15,7 +15,7 @@ library(cellrangerRkit)
   #sig_data_filt <- ppt[which(rownames(ppt) %in% sig_genes),]
   sig_data_filt <- dmap_data[match(use_gene_ids[which(use_gene_ids %in% sig_genes)], rownames(dmap_data)),]
   #co
-  z <- lapply(1:ncol(sig_data_filt), function(j) sapply(1:nrow(m_forsig), function(i) cor(m_forsig[i,], sig_data_filt[j,], method='spearman')))
+  z <- lapply(1:ncol(sig_data_filt), function(j) sapply(1:ncol(m_forsig), function(i) cor(m_forsig[,i], sig_data_filt[,j], method='spearman')))
   z <- do.call(cbind, z)
   colnames(z) <- colnames(sig_data_filt)
   z
