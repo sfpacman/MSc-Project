@@ -58,6 +58,7 @@ library(cellrangerRkit)
     cat("Sorting\n")
     setkey(bc_gene_umi_subsampled, barcode, gene)
     cat("Re-aggregating\n")
+    bc_gene_umi_subsampled <- data.table(bc_gene_umi_subsampled)
     bc_gene_counts <- bc_gene_umi_subsampled[barcode %in% orig_mat_barcodes, j=list(count=sum(reads > 0)), by=c('barcode', 'gene')]
     cat("Building matrix\n")
     with(bc_gene_counts, sparseMatrix(i = match(barcode, orig_mat_barcodes),
