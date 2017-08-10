@@ -81,5 +81,11 @@ pure_id<-c("CD34+","CD56+ NK","CD4+/CD45RA+/CD25- Naive T", "CD4+/CD25 T Reg","C
 spm <- readRDS("subsampled_purified_mats")
 app  <-readRDS("all_pure_pca.rds")
 x <- get_sample(spm,app,pure_id,size=100, get_sum_list = TRUE)
+### computesumfactor normalization #####
+# Find highly 
+m <- t(as.matrix(x))
+# find highly abundant gene - avoid zero size factor  
+high.ab <- which(rowMeans(m) >1)
+nor_fac <- computeSumFactors(m,subset.row=high.ab)
 
 
