@@ -4,6 +4,17 @@ library(dplyr)
 library(reshape2)
 library(Matrix)
 ### for rds file
+load_purified_pbmc_types<-function(pure_select_file) {
+  pure_select_id <- pure_select_file$pure_id   # from pure_select_file
+  pure_select_avg <- pure_select_file$pure_avg # from pure_select_file
+  pure_use_genes <- pure_select_file$pure_use_genes # from pure_select_file
+  pure_use_genes_ens<-pure_select_file$pure_use_gene_name
+  avg<-data.frame(t(pure_select_avg))
+  rownames(avg)<-pure_select_file$pure_use_gene_name
+  names(avg)<-pure_select_id
+  return(avg)
+}
+
 .do_propack <- function(x,n) {
   use_genes <- which(colSums(x) > 1)
   m <- x[,use_genes]
@@ -54,8 +65,8 @@ cls_id<-factor(colnames(m)[test])
 return(cls_id) 
 }
                                                         
-get_danaher_assign(mat, sig_def, cluster,tsne){
-for(i in 1:length(cell_list)){
+get_danaher_assign(mat,ngn,sig_def, cluster,tsne){
+for(i in 1:length(sig_def)){
  type= cell_list[i]
  type_gene_select <- match(unlist(cell_list[i]),ngn)
  type_gene_select <- type_gene_select[!is.na(type_gene_select)]
