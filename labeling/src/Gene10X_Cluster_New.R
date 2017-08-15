@@ -167,6 +167,15 @@ load_purified_pbmc_types<-function(pure_select_file) {
     best
   }))
 }
+### for facs marker ###
+projection <- nor_exp$tsne
+for(i in 1:length(cell_list)){
+  type= cell_list[[i]]
+  type_gene_select <- match(unlist(cell_list[i]),ngn)
+  type_expr <-nor_10X$m[,type_gene_select]
+  
+ }
+
 #####
 gbm1 <- load_cellranger_matrix('~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex')
 analysis_results <- load_cellranger_analysis_results("~/bioinfo/Project/labeling/data/fresh_68k_pbmc_donor_a_filtered_gene_bc_matrices.mex")
