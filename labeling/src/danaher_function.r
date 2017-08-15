@@ -3,7 +3,78 @@ library(magrittr)
 library(dplyr)
 library(reshape2)
 library(Matrix)
+### for rds file
+.do_propack <- function(x,n) {
+  use_genes <- which(colSums(x) > 1)
+  m <- x[,use_genes]
+  bc_tot <- rowSums(m)
+  median_tot <- median(bc_tot)
+  m <- sweep(m, 1, median_tot/bc_tot, '*')
+  m <- log(1+m)
+  m <- sweep(m, 2, colMeans(m), '-')
+  m <- sweep(m, 2, apply(m, 2, sd), '/')
+  ppk<-propack.svd(as.matrix(m),neig=n)
+  pca<-t(ppk$d*t(ppk$u))
+  list(ppk=ppk,pca=pca, m=m,use_genes=use_genes)
+}
 
+.compare_by_cor<-function(m_filt,use_gene_ids,dmap_data) {
+  
+  sig_genes <- intersect(use_gene_ids, rownames(dmap_data))
+  m_forsig <- as.matrix(m_filt[,which(use_gene_ids %in% sig_genes)])
+  sig_data_filt <- dmap_data[match(use_gene_ids[which(use_gene_ids %in% sig_genes)], rownames(dmap_data)),]
+  
+  z <- lapply(1:ncol(sig_data_filt), function(j) sapply(1:nrow(m_forsig), function(i) cor(m_forsig[i,], sig_data_filt[,j], method='spearman')))
+  z <- do.call(cbind, z)
+  colnames(z) <- colnames(sig_data_filt)
+  z
+}
+                                                        
+.reassign_pbmc_11<-function(z) {
+  unlist(lapply(1:nrow(z),function(i) {
+    best<-which.max(z[i,])
+    x<-z[i,]
+    nextbest<-which.max(x[x!=max(x)])
+    # if best is CD4+ T helper, and the next best is cd4+/cd25+, or cd4+/cd45ro+ or cd4+/cd45ra+/cd25-, use the next best assignment
+    if (best==9 & (nextbest==3 || nextbest==4 || nextbest==6)) {
+      best=nextbest
+    }
+    # if best is CD8+, and the next best is CD8+/CD45RA+, use next best assignment
+    if (best==7 & nextbest==5) {
+      best=5
+    }
+    best
+  }))
+} 
+                                                        
+get_cor_assign(mat, ref_mat, use_genes_n_ens){
+m <-.compare_by_cor(mat,use_genes_n_ens[1:1000],ref_mat)
+test<-.reassign_pbmc_11(m)
+cls_id<-factor(colnames(m)[test])
+return(cls_id) 
+}
+                                                        
+get_danaher_assign(mat, sig_def, cluster,tsne){
+for(i in 1:length(cell_list)){
+ type= cell_list[i]
+ type_gene_select <- match(unlist(cell_list[i]),ngn)
+ type_gene_select <- type_gene_select[!is.na(type_gene_select)]
+ type_expr <- mat[,type_gene_select]
+ type_mean <-colMeans(t(type_expr))
+ mean_score <- cbind(unlist(mean_score), type_mean)
+ }
+colnames(mean_score) <- names(cell_list)
+cluster_mean <- data.frame(cbind(cluster,mean_score))
+
+score_by_cluster <- round(cluster_mean %>% group_by(Cluster) %>% summarise_all(funs(mean)),3)
+cluster_type <-apply(score_by_cluster[,-which(names(cluster_mean) %in% c("Cluster"))], 1,function(x) which(x == max(x)))
+cluster_type <-data.frame(cluster=1:length(cluster_type),cell_type=cluster_type, name_type=names(cell_list)[cluster_type])
+cluster_tsne <-merge( x=data.frame(cbind(cluster,tsne)) , y=cluster_type, by.x="cluster", by.y="cluster")
+return(cluster_tsne)
+}
+
+
+### For cell ranger object 
 get_sig_profile <- function(gbm,analysis_results,sig_def){
   cluster_result <- analysis_results$kmeans[[paste(10,"clusters",sep="_")]]
   tsne_proj <- analysis_results$tsne
