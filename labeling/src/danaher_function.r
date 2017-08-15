@@ -58,14 +58,14 @@ load_purified_pbmc_types<-function(pure_select_file) {
   }))
 } 
                                                         
-get_cor_assign(mat, ref_mat, use_genes_n_ens){
+get_cor_assign <-function(mat, ref_mat, use_genes_n_ens){
 m <-.compare_by_cor(mat,use_genes_n_ens[1:1000],ref_mat)
 test<-.reassign_pbmc_11(m)
 cls_id<-factor(colnames(m)[test])
 return(cls_id) 
 }
                                                         
-get_danaher_assign(mat,ngn,sig_def, cluster,tsne){
+get_danaher_assign <- function(mat,ngn,sig_def, cluster,tsne){
 for(i in 1:length(sig_def)){
  type= cell_list[i]
  type_gene_select <- match(unlist(cell_list[i]),ngn)
