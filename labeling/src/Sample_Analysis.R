@@ -73,8 +73,8 @@ sample <- readRDS("sample.rds")
   pca<-t(ppk$d*t(ppk$u))
   list(ppk=ppk,pca=pca, m=m,use_genes=use_genes)
 }
-
-
+sample <- readRDS("~/bioinfo/Project/labeling/data/sample.rds")
+pbmc68k <- readRDS("~/bioinfo/Project/labeling/data/pbmc68k.rds")
 ### UMI Normalization ###
 m <-sample$exp 
 l<-.normalize_by_umi(m)
@@ -84,38 +84,40 @@ m_n<-l$m
 M <- t(as.matrix(m))
 high.ab <- which(rowMeans(M) >1)
 nor_fac <- computeSumFactors(M,subset.row=high.ab)
-m_n <- nor_fac*t(M)
-
+M_n <- nor_fac*t(M)
+### Corelation ###
 df<-.get_variable_gene(m_n) 
 disp_cut_off<-sort(df$dispersion_norm,decreasing=T)[1000]
 df$used<-df$dispersion_norm >= disp_cut_off
 m_n_1000<-m_n[,head(order(-df$dispersion_norm),1000)]
-pca_n_1000<-.do_propack(m_n_1000,50)
-k_n_1000<-kmeans(pca_n_1000$pca,10,iter.max=150,algorithm="MacQueen")
-### Corelation ###
 use_genes_n<-order(-df$dispersion_norm)
-use_genes_n_id<-all_data[[1]]$hg19$gene_symbols[l$use_genes][order(-df$dispersion_norm)]
-use_genes_n_ens<-all_data[[1]]$hg19$genes[l$use_genes][order(-df$dispersion_norm)]
+#use_genes_n_id<-all_data[[1]]$hg19$gene_symbols[l$use_genes][order(-df$dispersion_norm)]
+use_genes_n_ens<-pbmc68k$all_data[[1]]$hg19$genes[l$use_genes][order(-df$dispersion_norm)]
 z_1000_11<-.compare_by_cor(m_filt,use_genes_n_ens[1:1000],purified_ref_11) 
 # reassign IDs, as there're some overlaps in the purified pbmc populations
 test<-.reassign_pbmc_11(z_1000_11)
 cls_id<-factor(colnames(z_1000_11)[test])
 
 ### Danaher ###
+pca_n_1000<-.do_propack(m_n_1000,50)
+k_n_1000<-kmeans(pca_n_1000$pca,10,iter.max=150,algorithm="MacQueen")
 gen <- pbmc68k$all_data[[1]]$hg19$gene_symbols
+mean_score <- list()
 for(i in 1:length(cell_list)){
  type= cell_list[i]
- type_gene_select <- match(unlist(cell_list[i]),gene)
+ type_gene_select <- match(unlist(cell_list[i]),gen)
  type_gene_select <- type_gene_select[!is.na(type_gene_select)]
- type_expr <- mat[,type_gene_select]
+ type_expr <- m_n[,type_gene_select]
  type_mean <-colMeans(t(type_expr))
  mean_score <- cbind(unlist(mean_score), type_mean)
  }
 
 colnames(mean_score) <- names(cell_list)
-cluster_mean <- data.frame(cbind(Cluster=nor_exp$k$cluster,mean_score))
+cluster_mean <- data.frame(cbind(Cluster=k_n_1000$cluster,mean_score))
 
 score_by_cluster <- round(cluster_mean %>% group_by(Cluster) %>% summarise_all(funs(mean)),3)
 cluster_type <-apply(score_by_cluster[,-which(names(cluster_mean) %in% c("Cluster"))], 1,function(x) which(x == max(x)))
 
-cluster_tsne <-merge( x=cluster , y=cluster_type, by.x="cluster", by.y="Cluster")
+rcell_assign <-sapply(cluster_mean$Cluster,function(x){cluster_type[x]})
+act <- unlist(sample$summary[,2])
+result <- cbind(pre=rcell_assign,act =act)

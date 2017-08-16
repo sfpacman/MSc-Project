@@ -1,0 +1,40 @@
+---
+title: 'Report: benchmarking'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+ sam<-readRDS("/home/yup/bioinfo/Project/labeling/data/sample_analysis_nor_mat")
+ sample<-readRDS("/home/yup/bioinfo/Project/labeling/data/sample.rds")
+```
+
+## Cluster results between two read count normalization method 
+
+```{r echo=FALSE}
+cat("sumcomputeFactor\n")
+table(sam$M_n$k_n_100$cluster) 
+cat("umi normalizaiton\n")
+table(sam$X$l$k_n_100$cluster)
+```
+
+## Cell assignement 
+
+
+
+```{r }
+cell_name <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg")
+x_table <- table(sam$X$result[,1])
+ x_name <-cell_name[as.numeric(names(x_table))]
+names(x_table) <- x_name
+print(x_table/length(sam$M_n$result[,1])*100)
+f_table <-  table(sam$M_n$result[,1]) 
+f_name <- cell_name[as.numeric(names(f_table))]
+names(f_table) <-f_name
+print(f_table/length(sam$X$result[,1])*100)
+expect_ratio <-c(6/11*100, 1/11*100, 1/11*100,1/11*100, 1/11*100,1/11*100)
+data.frame(f_table) %>% group_by(pre,act) %>% tally()
+names(expect_ratio) <-c("T-cell family", "NK","DC","Monocyte","B_cell","CD34")
+print(expect_ratio)
+```
+

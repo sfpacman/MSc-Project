@@ -1,0 +1,80 @@
+---
+title: "Output for Jacob"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(reshape2)
+library(Matrix)
+library(ggplot2)
+library(dplyr)
+visualize_me<- function(gbm,gene_probes,projection,limits=c(0,10),marker_size=0.1,title=NULL) {
+ 
+  gene_values <-gbm
+  #colnames(gene_values) <- gene_probes
+  projection_names <-  colnames(projection)
+  colnames(projection) <- c('Component.1', 'Component.2')
+  proj_gene <- data.frame(cbind(projection,gene_values))
+  proj_gene_melt <- melt(proj_gene, id.vars=c("Component.1", "Component.2"))
+  p<- ggplot(proj_gene_melt, aes(Component.1, Component.2)) +
+    geom_point(aes(colour=value),size=marker_size) + facet_wrap(~variable) +
+    scale_colour_gradient(low="grey",high="red",name = "val") +
+    labs(x=projection_names[1],y=projection_names[2])
+  if (!is.null(title)) {  p <- p + ggtitle(title) }
+  p <- p + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
+                              panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+  return(p)
+}
+```
+
+## Danaher Marker
+
+Quality of Danahe Marker: 
+inconsistent variablity among genes in each signature 
+```{r echo =FALSE}
+rank<-readRDS("~/bioinfo/Project/labeling/data/danaer_dispersion_rank.rds")
+sapply(rank,function(x){t(x)})
+```
+
+## 10X correlation vs Danahe's Signature 
+
+
+
+```{r echo =FALSE}
+visualize_clusters(nor_exp$k$cluster,nor_exp$tsne[c("X1","X2")],title="Cluster")
+knitr::include_graphics("/home/yup/bioinfo/Project/labeling/data/corr.png")
+knitr::include_graphics("/home/yup/bioinfo/Project/labeling/data/danaher.png")
+
+```
+## Gene Signature for FACS
+
+```{r echo =FALSE}
+nor_exp <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_exp.rds")
+nor_10X <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_10X_expr.rds")
+pbmc68k <- readRDS("/home/yup/bioinfo/Project/labeling/data/pbmc68k_data.rds")
+CD14Monocyte <-c ("FTL")
+CD19B <-c ("CD74","CD27")
+CD34 <- "CD34"
+CD56NK <-c ("CD3D","NKG7")
+CD8CytotoxicT <-c ("CD8A","CD3D")
+Dendritic <-c ("CLEC9A","CD1C")
+T_group<-"NKG7"
+cell_list <- list(CD14Monocyte,CD19B,CD34,CD56NK,CD8CytotoxicT,Dendritic,T_group)
+names(cell_list) <-c("CD14Monocyte","CD19B","CD34","CD56NK","CD8CytotoxicT","Dendritic","T_group")
+gen <- pbmc68k$all_data[[1]]$hg19$gene_symbols
+ngn <- sapply(nor_10X$use_gene, function(x){gen[x]})
+tsne<-nor_exp$tsne
+m <- nor_10X$m
+
+for(i in 1:length(cell_list)){
+ type= cell_list[i]
+ type_gene_select <- match(unlist(type),ngn)
+ for(x in type_gene_select){
+ z <- m[,x]
+ print(visualize_me(z,cell_list[i],tsne[c("X1","X2")],title=paste(names(cell_list[i]), ngn[x], sep= ":")))
+}
+ }
+```
