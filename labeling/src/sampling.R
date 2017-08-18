@@ -42,10 +42,13 @@ get_pure_mtx_indx <- function(id,pure_type_pca) {
  }
 
  get_sample <- function(pure_all_mtx, pure_all_pca,id , size = 1000,get_sum_list = FALSE, default = TRUE){
- 
+ addone <- FALSE
  sum_list <- list()
- for(i in 1:length(pure_all_mtx)){
- type = id[i]
+ i <- 1
+ while(i <= length(pure_all_mtx)){
+  if(addone){type= id[i+1]}
+  else{type = id[i]}
+  cat(type)
   sel_indx <-get_pure_mtx_indx(type,pure_all_pca[[i]])
   cat(paste("index return",length(sel_indx),"\n"))
   sel_mtx <- pure_all_mtx[[i]][sel_indx,]
@@ -59,19 +62,18 @@ get_pure_mtx_indx <- function(id,pure_type_pca) {
   all_mtx <- rbind(all_mtx, s_mtx)}
   cat("Combining \n")
   if(get_sum_list){
-  sum_list <- rbind(sum_list,cbind(rownames(s_mtx), rep(type, nrow(s_mtx))))
+  sum_list <- rbind(unlist(sum_list),cbind(rownames(s_mtx), rep(type, nrow(s_mtx))))
  }
- if(default & i == length(pure_all_mtx)) {
-  j <- length(id)
-  i <- i - 1 
-  id[j-1] <- id[j]
-  default = FALSE
- }
- }
+  if(default & i == length(pure_all_mtx)) {
+    addone=TRUE
+    default = FALSE
+  }
+  else{ i <- i + 1} }
+ 
  result <-list()
  result$exp <- all_mtx
- colnames(result$summary) <-c("id","result")
  result$summary <- sum_list 
+ colnames(result$summary) <-c("id","result")
  return(result)
  }
  

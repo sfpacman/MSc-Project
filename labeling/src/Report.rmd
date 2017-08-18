@@ -10,6 +10,10 @@ library(reshape2)
 library(Matrix)
 library(ggplot2)
 library(dplyr)
+
+nor_exp <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_exp.rds")
+nor_10X <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_10X_expr.rds")
+pbmc68k <- readRDS("/home/yup/bioinfo/Project/labeling/data/pbmc68k_data.rds")
 visualize_me<- function(gbm,gene_probes,projection,limits=c(0,10),marker_size=0.1,title=NULL) {
  
   gene_values <-gbm
@@ -45,16 +49,22 @@ sapply(rank,function(x){t(x)})
 
 ```{r echo =FALSE}
 visualize_clusters(nor_exp$k$cluster,nor_exp$tsne[c("X1","X2")],title="Cluster")
+
+tsne_center <- list()
+for(i in 1:length(unique(nor_exp$k$cluster))){
+c.x<-mean(nor_exp$tsne$X1[nor_exp$k$cluster==i])
+c.y<-mean(nor_exp$tsne$X2[nor_exp$k$cluster==i])
+tsne_center <- rbind(unlist(tsne_center), c(c.x,c.y))
+}
+cluster_plot <- visualize_clusters(nor_exp$k$cluster,nor_exp$tsne[c("X1","X2")])+guides(col = guide_legend(title="Cluster", override.aes = list(size=3)))+annotate("text", x = tsne_center[, 1], y = tsne_center[, 2], size = 5,label=c(1:length(tsne_center[,1])))+labs( x= "TSNE1" , y="TSNE2")
+
 knitr::include_graphics("/home/yup/bioinfo/Project/labeling/data/corr.png")
 knitr::include_graphics("/home/yup/bioinfo/Project/labeling/data/danaher.png")
-
 ```
 ## Gene Signature for FACS
 
 ```{r echo =FALSE}
-nor_exp <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_exp.rds")
-nor_10X <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_10X_expr.rds")
-pbmc68k <- readRDS("/home/yup/bioinfo/Project/labeling/data/pbmc68k_data.rds")
+
 CD14Monocyte <-c ("FTL")
 CD19B <-c ("CD74","CD27")
 CD34 <- "CD34"

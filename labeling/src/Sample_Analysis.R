@@ -7,12 +7,13 @@ source("danaher_def.R")
 source("danaher_function.R")
 sample <- readRDS("sample.rds")
 
-## modtified not enough unquie breaking points- add unique functions on quantile on cut 
+## modtified:not enough unquie breaking points- add unique functions on quantile on cut 
 .get_variable_gene<-function(m) {
   
   df<-data.frame(mean=colMeans(m),cv=apply(m,2,sd)/colMeans(m),var=apply(m,2,var))
   df$dispersion<-with(df,var/mean)
-  df$mean_bin<-with(df,cut(mean,breaks=c(-Inf,unique(quantile(mean,seq(0.1,1,0.05))),Inf)))
+  #df$mean_bin<-with(df,cut(mean,breaks=c(-Inf,unique(quantile(mean,seq(0.1,1,0.05))),Inf)))
+  df$mean_bin<-with(df,cut(mean,breaks=c(-Inf,quantile(mean,seq(0.1,1,0.05)),Inf)))
   var_by_bin<-ddply(df,"mean_bin",function(x) {
     data.frame(bin_median=median(x$dispersion),
                bin_mad=mad(x$dispersion))
@@ -79,12 +80,17 @@ pbmc68k <- readRDS("~/bioinfo/Project/labeling/data/pbmc68k.rds")
 m <-sample$exp 
 l<-.normalize_by_umi(m)
 m_n<-l$m
-
+sample_analysis$X <- list(m_n= l$m, use_genes= l$use_genes)
 ### computesumfactor nomrmalization###
-M <- t(as.matrix(m))
+use_genes<- which(colMeans(m) > 0)
+M <- m[,use_genes]
+M <- t(as.matrix(M))
 high.ab <- which(rowMeans(M) >1)
-nor_fac <- computeSumFactors(M,subset.row=high.ab)
+clusters <- quickCluster(M, subset.row=high.ab)
+nor_fac <- computeSumFactors(M,subset.row=high.ab,cluster=clusters)
 M_n <- nor_fac*t(M)
+sample_analysis$S <- list(m_n= M_n, use_genes= use_genes)
+
 ### Corelation ###
 df<-.get_variable_gene(m_n) 
 disp_cut_off<-sort(df$dispersion_norm,decreasing=T)[1000]
@@ -102,10 +108,11 @@ cls_id<-factor(colnames(z_1000_11)[test])
 pca_n_1000<-.do_propack(m_n_1000,50)
 k_n_1000<-kmeans(pca_n_1000$pca,10,iter.max=150,algorithm="MacQueen")
 gen <- pbmc68k$all_data[[1]]$hg19$gene_symbols
+
 mean_score <- list()
 for(i in 1:length(cell_list)){
  type= cell_list[i]
- type_gene_select <- match(unlist(cell_list[i]),gen)
+ type_gene_select <- match(unlist(cell_list[i]),ngn)
  type_gene_select <- type_gene_select[!is.na(type_gene_select)]
  type_expr <- m_n[,type_gene_select]
  type_mean <-colMeans(t(type_expr))
@@ -116,7 +123,12 @@ colnames(mean_score) <- names(cell_list)
 cluster_mean <- data.frame(cbind(Cluster=k_n_1000$cluster,mean_score))
 
 score_by_cluster <- round(cluster_mean %>% group_by(Cluster) %>% summarise_all(funs(mean)),3)
-cluster_type <-apply(score_by_cluster[,-which(names(cluster_mean) %in% c("Cluster"))], 1,function(x) which(x == max(x)))
+score_by_cluster <- score_by_cluster[,-which(names(score_by_cluster) %in% c("Cluster"))]NA
+cluster_type <- list()
+for( i in 1:nrow(score_by_cluster)){
+  x <- as.numeric(score_by_cluster[i,])
+  if( mean(x) == 0 ) {cluster_type = c(unlist(cluster_type),0) }
+  else {cluster_type = c(unlist(cluster_type), which(x== max(x)))} } 
 
 rcell_assign <-sapply(cluster_mean$Cluster,function(x){cluster_type[x]})
 act <- unlist(sample$summary[,2])
