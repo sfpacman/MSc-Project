@@ -120,6 +120,7 @@ z_1000_11<-.compare_by_cor(m_filt,use_genes_n_ens[1:1000],purified_ref_11)
 # reassign IDs, as there're some overlaps in the purified pbmc populations
 test<-.reassign_pbmc_11(z_1000_11)
 cls_id<-factor(colnames(z_1000_11)[test])
+sample_analysis$X$cls_id <-cls_id
 
 ### For analysis that uses PCA+k-means for 10X umi normalization ### 
 pca_n_1000<-.do_propack(m_n_1000,50)
@@ -134,4 +135,4 @@ m_n_1000<-sample_analysis$S$m_n[,head(order(-df$dispersion_norm),1000)]
 pca_n_1000<-.do_propack(m_n_1000,50)
 k_n_1000<-kmeans(pca_n_1000$pca,10,iter.max=150,algorithm="MacQueen")
 sample_analysis$S$k <-k_n_1000
-saveRDS(sample_analysis,"sample_analysis$S$k.rds")
+saveRDS(sample_analysis,"sample_analysis.rds")
