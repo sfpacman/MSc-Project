@@ -23,7 +23,7 @@ pie(freq, labels = paste(cluster_type,signif(clu$S_s_11[,2]/sum(clu$S_s_11[,2])*
 pbmc68k <- readRDS("pbmc68k.rds")
 gen <- pbmc68k$all_data[[1]]$hg19$gene_symbols
 ngn <- sapply(use_gene, function(x){gen[x]})
-m_n <- sample_analysis$X$$m_n
+m_n <- sample_analysis$X$m_n
 ### mean score computing ### 
 mean_score <- list()
 for(i in 1:length(cell_list)){
