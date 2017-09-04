@@ -9,5 +9,5 @@ All codes used in analysis and figures is under final_analysis folder
 All data are obtained from https://github.com/sfpacman/single-cell-3prime-paper/tree/master/pbmc68k_analysis#single-cell-rna-seq-secondary-analysis-of-68k-pbmcs
 
 
-R-markdown HTML page can be found at( Update in prgress):
+R-markdown HTML page can be found at( Update in progress):
 http://student.cryst.bbk.ac.uk/~yp001/project_index.html
