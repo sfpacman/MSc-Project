@@ -5,6 +5,10 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+source("danaher_def.R")
+source("danaher_alt.R")
+library(knitr)
+library(cellrangerRkit)
  sam<-readRDS("/home/yup/bioinfo/Project/labeling/data/sample_analysis_nor_mat")
  sample<-readRDS("/home/yup/bioinfo/Project/labeling/data/sample.rds")
 ```
@@ -16,14 +20,24 @@ cat("sumcomputeFactor\n")
 table(sam$M_n$k_n_100$cluster) 
 cat("umi normalizaiton\n")
 table(sam$X$l$k_n_100$cluster)
+std=apply(score_by_cluster[,-1],1,function(x){sd(x)})
+kable(cbind(score_by_cluster[,1],ref_exp =rowMeans(reference_expression),score_by_cluster[,-1]),SD=std)
+print(sig_plot)
 ```
+```{r echo=FALSE}
+sapply(1:length(unlist(score_by_cluster[,1])),function(x) { 
+  plot_x <- plot(unlist(score_by_cluster[x,-1]),ylab="Cluster Cell Score",xlab="cell type", main=c("Cluster",x),ylim=c(-0.1,max(score_by_cluster[x,-1],reference_expression[x,2])*1.15))
+plot_x <- text(unlist(score_by_cluster[x,-1]), labels=(names(cell_list)), cex=0.5, pos=4,offset = 1 ,col="red")
+abline(h=reference_expression[x,2],col="green",lty = 2) 
 
+})
+```
 ## Cell assignement 
 
 
 
 ```{r }
-cell_name <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg")
+cell_name <- c("B_cells","CD45","CD8_T_cells","Cytotoxic_cells","DC","Exhausted_CD8","Macrophages","Mast_cells","Neutrophils","NK_CD56dim_cells","NK_cells","T_cells","Th1_cells","Treg" )
 x_table <- table(sam$X$result[,1])
  x_name <-cell_name[as.numeric(names(x_table))]
 names(x_table) <- x_name
@@ -33,7 +47,8 @@ f_name <- cell_name[as.numeric(names(f_table))]
 names(f_table) <-f_name
 print(f_table/length(sam$X$result[,1])*100)
 expect_ratio <-c(6/11*100, 1/11*100, 1/11*100,1/11*100, 1/11*100,1/11*100)
-data.frame(f_table) %>% group_by(pre,act) %>% tally()
+#result <- sam$X$result
+#data.frame(sam$X$result) %>% group_by(pre,act) %>% tally()
 names(expect_ratio) <-c("T-cell family", "NK","DC","Monocyte","B_cell","CD34")
 print(expect_ratio)
 ```

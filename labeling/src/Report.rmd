@@ -10,22 +10,27 @@ library(reshape2)
 library(Matrix)
 library(ggplot2)
 library(dplyr)
+library(easyGgplot2)
+library(cellrangerRkit)
 
 nor_exp <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_exp.rds")
 nor_10X <- readRDS("/home/yup/bioinfo/Project/labeling/data/10x_cor/nor_10X_expr.rds")
 pbmc68k <- readRDS("/home/yup/bioinfo/Project/labeling/data/pbmc68k_data.rds")
 visualize_me<- function(gbm,gene_probes,projection,limits=c(0,10),marker_size=0.1,title=NULL) {
- 
+ moreone=FALSE
   gene_values <-gbm
-  #colnames(gene_values) <- gene_probes
+  if(ncol(gene_values) >1){
+  colnames(gene_values) <- gene_probes
+  moreone = TRUE}
   projection_names <-  colnames(projection)
   colnames(projection) <- c('Component.1', 'Component.2')
   proj_gene <- data.frame(cbind(projection,gene_values))
   proj_gene_melt <- melt(proj_gene, id.vars=c("Component.1", "Component.2"))
-  p<- ggplot(proj_gene_melt, aes(Component.1, Component.2)) +
-    geom_point(aes(colour=value),size=marker_size) + facet_wrap(~variable) +
-    scale_colour_gradient(low="grey",high="red",name = "val") +
-    labs(x=projection_names[1],y=projection_names[2])
+  p <- ggplot(proj_gene_melt, aes(Component.1, Component.2)) +
+    geom_point(aes(colour=value),size=marker_size) 
+  if(moreone){p <-p+facet_wrap(~variable)}
+  p<- p + scale_colour_gradient(low="grey",high="red",name = "val")  +
+    labs(x=projection_names[1],y=projection_names[2]) +
   if (!is.null(title)) {  p <- p + ggtitle(title) }
   p <- p + theme_bw() + theme(plot.title = element_text(hjust = 0.5),
                               panel.grid.major = element_blank(), panel.grid.minor = element_blank())
@@ -40,7 +45,8 @@ Quality of Danahe Marker:
 inconsistent variablity among genes in each signature 
 ```{r echo =FALSE}
 rank<-readRDS("~/bioinfo/Project/labeling/data/danaer_dispersion_rank.rds")
-sapply(rank,function(x){t(x)})
+kable(rank)
+sapply(rank,function(x){kable(t(x))})
 ```
 
 ## 10X correlation vs Danahe's Signature 
@@ -84,7 +90,20 @@ for(i in 1:length(cell_list)){
  type_gene_select <- match(unlist(type),ngn)
  for(x in type_gene_select){
  z <- m[,x]
- print(visualize_me(z,cell_list[i],tsne[c("X1","X2")],title=paste(names(cell_list[i]), ngn[x], sep= ":")))
+ #print(z,cell_list[i],tsne[c("X1","X2")],title=paste(names(cell_list[i]), ngn[x], sep= ":"))
 }
- }
+}
+for(cell_type in c("CD4",c("CD8A","CD8B"))){
+ type_gene_select <- match(cell_type,ngn)
+x <- log2(as.numeric(summary(nor_10X$m[which(nor_10X$m[,type_gene_select]>0),type_gene_select]))+1)
+if(length(cell_type) >1) {x <- log2(as.numeric((summary(nor_10X$m[which(nor_10X$m[,type_gene_select[1]]>0),type_gene_select[1]])))+1)}
+gens <- as.matrix(log2(nor_10X$m[,type_gene_select]+1))
+
+#gplot <- visualize_me(gens,cell_type, nor_exp$tsne[c("X1","X2")])+scale_colour_gradientn(colours = c("#e6e6e6","#ff3333","#e60000","#e60000","#4d0000","#4d0000"),values = rescale(c(0,x[2:5])),guide = "colorbar", limits=c(0, x[6])) + labs(x="TSNE.1",y="TSNE.2")
+#print(gplot)
+#need to make a dataframe(expression= expression, type= type) from above
+#marker.m <- melt(marker,id.var = "Marker")
+#ggplot(data = marker.m, aes(x=variable, y=value)) + geom_boxplot(aes(fill=Marker))+labs(x = NULL, y="log2 of normalizaed UMI count")
+}
+
 ```
