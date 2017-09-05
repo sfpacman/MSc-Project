@@ -7,4 +7,4 @@ The following R-scripts are used for
 ## Simulated Sample Analysis
 * **sampling.R**: functions used to sample and assemble a sample data from 11 downsampled purified population  
 * **Sample_Process.R**: produce a sample gene expression of 2750 cells as well as normalized expression data and k-mean clustering
-* **Sample_Analysis.R**: analysis
+* **Sample_Analysis.R**: result analysis
