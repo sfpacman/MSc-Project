@@ -5,7 +5,7 @@ Single-cell RNA sequencing (scRNA-seq) technology is incredibly powerful tool to
 ## Analysis and Figures used in the thesis 
 All codes used in analysis and figures is under final_analysis folder
 
-## Data used in thesis 
+## Data used in this Project
 All data are obtained from https://github.com/sfpacman/single-cell-3prime-paper/tree/master/pbmc68k_analysis#single-cell-rna-seq-secondary-analysis-of-68k-pbmcs
 
 
